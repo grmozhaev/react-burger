@@ -1,0 +1,22 @@
+.ingredients-container {
+  max-width: 600px;
+}
+
+.tabs {
+  display: flex;
+}
+
+.ingredients-scrollable {
+  height: 500px;
+  overflow-y: auto;
+}
+
+.ingredients-list {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+}
+
+.list-item {
+  list-style-type: none;
+}

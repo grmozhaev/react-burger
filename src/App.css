@@ -1,0 +1,25 @@
+.app {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.app-header {
+  max-width: 1280;
+  margin: 0 auto;
+  position: "fixed";
+  top: 0;
+  width: "100%";
+}
+
+.title-container {
+  position: absolute;
+  top: 75;
+}
+
+.burger-container {
+  display: flex;
+}
+
+.subtitle {
+  display: block;
+}
