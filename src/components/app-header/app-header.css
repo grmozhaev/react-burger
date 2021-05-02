@@ -1,0 +1,25 @@
+.header {
+  display: flex;
+  max-width: 1280px;
+  margin: 0 auto;
+  align-items: center;
+  background: #000;
+}
+
+.container {
+  display: flex;
+  flex: 1;
+}
+
+.container-right {
+  flex-direction: row-reverse;
+}
+
+.navlink-container {
+  display: flex;
+}
+
+.navlink {
+  text-decoration: none;
+  color: #ffffff;
+}
