@@ -4,13 +4,13 @@ import "./price.css";
 
 interface PriceProps {
   price: number;
-  styles?: string;
+  classes?: string;
 }
 
 const Price: FC<PriceProps> = (props) => {
-  const { price, styles } = props;
+  const { price, classes } = props;
   return (
-    <div className={`price-tag ${styles}`}>
+    <div className={`price-tag ${classes}`}>
       <p className="text text_type_digits-default mr-1">{price}</p>
       <CurrencyIcon type="primary" />
     </div>

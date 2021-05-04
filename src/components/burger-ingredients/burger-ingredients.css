@@ -7,6 +7,7 @@
 }
 
 .ingredients-scrollable {
+  scroll-behavior: smooth;
   height: 500px;
   overflow-y: auto;
 }
@@ -19,4 +20,8 @@
 
 .list-item {
   list-style-type: none;
+}
+
+.list-item:last-of-type div {
+  margin-bottom: 0;
 }

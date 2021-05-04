@@ -39,8 +39,5 @@
 .order-scrollable {
   height: 320px;
   overflow-y: auto;
-}
-
-.order-scrollable:last-child {
-  margin-bottom: 0;
+  padding: 0;
 }
