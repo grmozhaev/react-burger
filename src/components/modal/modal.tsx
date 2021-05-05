@@ -14,6 +14,11 @@ interface ModalHeaderProps {
   onClose: () => void;
 }
 
+export enum ModalType {
+  PICKED_INGREDIENT,
+  ORDER,
+}
+
 const ModalHeader = ({ header, onClose }: ModalHeaderProps) => {
   const classes = !header && "modal__no-header-close-icon";
   return (

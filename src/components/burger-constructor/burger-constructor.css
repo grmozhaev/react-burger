@@ -1,28 +1,3 @@
-.item {
-  background-color: #1c1c1c;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  border-radius: 80px;
-  width: 583px;
-}
-
-.item-first {
-  border-radius: 80px 80px 30px 30px;
-}
-
-.item-last {
-  border-radius: 30px 30px 80px 80px;
-}
-
-.item-image {
-  width: 25%;
-}
-
-.item-name {
-  width: 100%;
-}
-
 .checkout {
   display: flex;
   justify-content: flex-end;
@@ -31,13 +6,7 @@
 .constructor {
   display: flex;
   flex-direction: column;
-  margin-left: 70px;
-  width: 600px;
+  margin-left: 20px;
+  width: 650px;
   height: 520px;
-}
-
-.order-scrollable {
-  height: 320px;
-  overflow-y: auto;
-  padding: 0;
 }

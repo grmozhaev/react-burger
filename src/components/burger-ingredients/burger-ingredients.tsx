@@ -1,8 +1,10 @@
 import Ingredient from "../ingredient/ingredient";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import { IngredientProps } from "../ingredient/ingredient";
+import { ModalType } from "../modal/modal";
 import "./burger-ingredients.css";
+import IngredientDetails from "../ingredient-details/ingredient-details";
 
 const tabs = [
   {
@@ -25,6 +27,21 @@ interface BurgerIngredientsProps {
 
 const BurgerIngredients = (props: BurgerIngredientsProps) => {
   const [state, setState] = useState({ activeTab: tabs[0].label });
+  const [modalType, setModalType] = useState<ModalType | null>(null);
+  let [ingredientName, setIngredientName] = useState<string>("");
+
+  const openIngredientModal = useCallback(
+    (name) => {
+      setModalType(ModalType.PICKED_INGREDIENT);
+      setIngredientName(name);
+    },
+    [setModalType]
+  );
+
+  const closeModal = useCallback(() => {
+    setModalType(null);
+    setIngredientName("");
+  }, [setModalType]);
 
   const handleTabClick = (activeTab: string) => {
     setState({ activeTab });
@@ -68,7 +85,7 @@ const BurgerIngredients = (props: BurgerIngredientsProps) => {
                       <li key={item._id} className="list-item">
                         <Ingredient
                           image_large={item.image_large}
-                          onClick={() => console.log()}
+                          onClick={openIngredientModal}
                           image={item.image}
                           name={item.name}
                           price={item.price}
@@ -80,6 +97,14 @@ const BurgerIngredients = (props: BurgerIngredientsProps) => {
             </ul>
           ))}
         </div>
+
+        {modalType === ModalType.PICKED_INGREDIENT && (
+          <IngredientDetails
+            ingredients={props.ingredients}
+            ingredientName={ingredientName}
+            onClose={closeModal}
+          />
+        )}
       </div>
     </section>
   );

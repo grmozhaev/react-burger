@@ -1,4 +1,3 @@
-import { useState, useCallback } from "react";
 import Price from "../price/price";
 import { Counter } from "@ya.praktikum/react-developer-burger-ui-components";
 import "./ingredient.css";
@@ -8,7 +7,7 @@ export interface IngredientProps {
   image_large: string;
   name: string;
   price: number;
-  onClick: () => void;
+  onClick: (name: string) => void;
   type?: string;
   _id?: number;
   calories?: number;
@@ -18,16 +17,11 @@ export interface IngredientProps {
 }
 
 const Ingredient = (props: IngredientProps) => {
-  let [counter, setCounter] = useState(0);
-
-  const { image, name, price } = props;
-
-  const handleClick = useCallback(() => {
-    setCounter(counter + 1);
-  }, [counter]);
+  let counter = 0;
+  const { image, name, price, onClick } = props;
 
   return (
-    <div className="ingredient" onClick={handleClick}>
+    <div className="ingredient" onClick={() => onClick(name)}>
       <div className="ingredient-icon">
         {counter > 0 && <Counter count={counter} size="default" />}
       </div>

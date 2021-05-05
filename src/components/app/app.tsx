@@ -1,7 +1,7 @@
-import AppHeader from "./components/app-header/app-header";
-import BurgerConstructor from "./components/burger-constructor/burger-constructor";
-import BurgerIngredients from "./components/burger-ingredients/burger-ingredients";
-import "./App.css";
+import AppHeader from "../app-header/app-header";
+import BurgerConstructor from "../burger-constructor/burger-constructor";
+import BurgerIngredients from "../burger-ingredients/burger-ingredients";
+import "./app.css";
 import { useState, useEffect } from "react";
 
 const App = () => {
@@ -24,7 +24,7 @@ const App = () => {
     };
 
     fetchData();
-  }, [setIngredients]);
+  }, []);
 
   return (
     <div className="app">
