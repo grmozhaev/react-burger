@@ -24,7 +24,7 @@ const ModalHeader = ({ header, onClose }: ModalHeaderProps) => {
   return (
     <div className="modal__header text text_type_main-large m-4 mt-2">
       {header}
-      <span className={`modal__close-icon + ${classes}`}>
+      <span className={`modal__close-icon ${classes}`}>
         <CloseIcon onClick={onClose} type="primary" />
       </span>
     </div>

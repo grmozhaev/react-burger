@@ -1,4 +1,3 @@
-import { FC } from "react";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import "./price.css";
 
@@ -7,7 +6,7 @@ interface PriceProps {
   classes?: string;
 }
 
-const Price: FC<PriceProps> = (props) => {
+const Price = (props: PriceProps) => {
   const { price, classes } = props;
   return (
     <div className={`price-tag ${classes}`}>

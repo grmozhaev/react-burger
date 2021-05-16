@@ -4,14 +4,14 @@ import "../modal/modal.css";
 
 interface OrderDetailsProps {
   onClose: () => void;
+  orderNumber: number;
 }
 
-const OrderDetails = ({ onClose }: OrderDetailsProps) => {
-  const orderId = Math.floor(100000 + Math.random() * 900000);
+const OrderDetails = ({ orderNumber, onClose }: OrderDetailsProps) => {
   return (
     <Modal onClose={onClose}>
       <div className="modal-container">
-        <p className="text text_type_digits-large order-id">{orderId}</p>
+        <p className="text text_type_digits-large order-id">{orderNumber}</p>
         <p className="text text_type_main-medium mt-4">идентификатор заказа</p>
         <div className="done-mark"></div>
         <p className="text text_type_main-default mt-5">

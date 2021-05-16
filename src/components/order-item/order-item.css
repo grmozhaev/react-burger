@@ -11,6 +11,14 @@
   justify-content: flex-end;
 }
 
+.order-scrollable-container:last-of-type {
+  margin-bottom: 0;
+}
+
 .remove-icon {
   cursor: pointer;
+}
+
+.order-item__price {
+  justify-content: flex-end;
 }

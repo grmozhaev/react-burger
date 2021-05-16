@@ -1,10 +1,10 @@
 import Modal from "../modal/modal";
-import { IngredientProps } from "../ingredient/ingredient";
+import { IngredientDTO } from "../ingredient/ingredient";
 import "./ingredient-details.css";
 import "../modal/modal.css";
 
 interface IngredientDetailsProps {
-  ingredients: IngredientProps[];
+  ingredients: IngredientDTO[];
   onClose: () => void;
   ingredientName: string;
 }

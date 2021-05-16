@@ -5,20 +5,9 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import Price from "../price/price";
 import "./order-item.css";
+import { IngredientDTO } from "../ingredient/ingredient";
 
-export interface OrderItemProps {
-  image: string;
-  name: string;
-  price: number;
-  classes?: string;
-  isLocked?: boolean;
-  calories?: number;
-  proteins?: number;
-  fat?: number;
-  carbohydrates?: number;
-}
-
-const OrderItem = (props: OrderItemProps) => {
+const OrderItem = (props: IngredientDTO) => {
   const { image, name, price, classes, isLocked } = props;
   const classNames = classes ? `item ${classes}` : "item ml-2 mb-2";
 
@@ -28,7 +17,7 @@ const OrderItem = (props: OrderItemProps) => {
       <div className={classNames}>
         <img src={image} className="item-image" alt="ingredient" />
         <p className="item-name">{name}</p>
-        <Price price={price} classes="mr-7" />
+        <Price price={price} classes="mr-7 order-item__price" />
         <div className="mr-7 remove-icon">
           {isLocked ? (
             <LockIcon type="secondary" />

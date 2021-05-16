@@ -2,21 +2,26 @@ import Price from "../price/price";
 import { Counter } from "@ya.praktikum/react-developer-burger-ui-components";
 import "./ingredient.css";
 
-export interface IngredientProps {
+export interface IngredientDTO {
   image: string;
-  image_large: string;
+  image_large?: string;
   name: string;
   price: number;
-  onClick: (name: string) => void;
   type?: string;
   _id?: number;
   calories?: number;
   proteins?: number;
   fat?: number;
   carbohydrates?: number;
+  classes?: string;
+  isLocked?: boolean;
 }
 
-const Ingredient = (props: IngredientProps) => {
+export interface BurgerIngredientProps extends IngredientDTO {
+  onClick: (name: string) => void;
+}
+
+const Ingredient = (props: BurgerIngredientProps) => {
   let counter = 0;
   const { image, name, price, onClick } = props;
 
@@ -27,7 +32,7 @@ const Ingredient = (props: IngredientProps) => {
       </div>
 
       <img src={image} alt={name} />
-      <Price price={price} classes="mb-1" />
+      <Price price={price} classes="mb-1 ingredient__price" />
       <p className="text text_type_main-default name">{name}</p>
     </div>
   );

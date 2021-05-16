@@ -3,9 +3,11 @@ import BurgerConstructor from "../burger-constructor/burger-constructor";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import "./app.css";
 import { useState, useEffect } from "react";
+import { IngredientContext } from "../../services/ingredientContext";
+import { IngredientDTO } from "../ingredient/ingredient";
 
 const App = () => {
-  const [ingredients, setIngredients] = useState([]);
+  const [ingredients, setIngredients] = useState<IngredientDTO[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,17 +33,17 @@ const App = () => {
       <header className="app-header">
         <AppHeader />
       </header>
-      <div className="title-container">
-        <p className="text text_type_main-large subtitle mb-3 mt-3">
-          Соберите бургер
-        </p>
+      <p className="text text_type_main-large subtitle mb-3 mt-3">
+        Соберите бургер
+      </p>
+      <IngredientContext.Provider value={{ ingredients, setIngredients }}>
         {ingredients.length > 0 && (
           <div className="burger-container">
             <BurgerIngredients ingredients={ingredients} />
-            <BurgerConstructor ingredients={ingredients} />
+            <BurgerConstructor />
           </div>
         )}
-      </div>
+      </IngredientContext.Provider>
     </div>
   );
 };
