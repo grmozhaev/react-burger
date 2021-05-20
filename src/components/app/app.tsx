@@ -1,13 +1,26 @@
+import { useState, useEffect, useReducer } from "react";
+
 import AppHeader from "../app-header/app-header";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
-import "./app.css";
-import { useState, useEffect } from "react";
-import { IngredientContext } from "../../services/ingredientContext";
+
+import {
+  IngredientListContext,
+  PickedIngredientContext,
+} from "../../services/ingredientContext";
+import { reducer } from "../../services/reducers/constructor";
 import { IngredientDTO } from "../ingredient/ingredient";
+
+import "./app.css";
+const initialState = { ingredients: [], isBun: false };
 
 const App = () => {
   const [ingredients, setIngredients] = useState<IngredientDTO[]>([]);
+
+  const [pickedIngredientsState, pickedIngredientsDispatcher] = useReducer(
+    reducer,
+    initialState
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,14 +49,18 @@ const App = () => {
       <p className="text text_type_main-large subtitle mb-3 mt-3">
         Соберите бургер
       </p>
-      <IngredientContext.Provider value={{ ingredients, setIngredients }}>
-        {ingredients.length > 0 && (
-          <div className="burger-container">
-            <BurgerIngredients ingredients={ingredients} />
-            <BurgerConstructor />
-          </div>
-        )}
-      </IngredientContext.Provider>
+      <IngredientListContext.Provider value={ingredients}>
+        <PickedIngredientContext.Provider
+          value={{ pickedIngredientsState, pickedIngredientsDispatcher }}
+        >
+          {ingredients.length > 0 && (
+            <div className="burger-container">
+              <BurgerIngredients ingredients={ingredients} />
+              <BurgerConstructor />
+            </div>
+          )}
+        </PickedIngredientContext.Provider>
+      </IngredientListContext.Provider>
     </div>
   );
 };

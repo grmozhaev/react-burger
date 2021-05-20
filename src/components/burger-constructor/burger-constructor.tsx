@@ -5,18 +5,27 @@ import OrderDetails from "../order-details/order-details";
 import OrderItems from "../order-items/order-items";
 import { IngredientDTO } from "../ingredient/ingredient";
 import { ModalType } from "../modal/modal";
-import { IngredientContext } from "../../services/ingredientContext";
+import {
+  PickedIngredientContext,
+  IngredientListContext,
+} from "../../services/ingredientContext";
 import "./burger-constructor.css";
 
 const BurgerConstructor = () => {
   const [modalType, setModalType] = useState<ModalType | null>(null);
-  const { ingredients } = useContext(IngredientContext);
+  const { pickedIngredientsState } = useContext(PickedIngredientContext);
+  const ingredients = useContext(IngredientListContext);
   const [orderNumber, setOrderNumber] = useState(0);
+
+  const pickedIngredients = useMemo(() => {
+    return pickedIngredientsState.ingredients
+      .map((item) => ingredients.filter((el) => el._id === item.id))
+      .flat();
+  }, [ingredients, pickedIngredientsState]);
 
   const openOrderModal = useCallback(() => {
     const fetchData = async () => {
       const url = "https://norma.nomoreparties.space/api/orders";
-      const ingredientIds = ingredients.map((item) => item._id);
 
       try {
         const response = await fetch(url, {
@@ -24,7 +33,7 @@ const BurgerConstructor = () => {
           headers: {
             "Content-Type": "application/json;charset=utf-8",
           },
-          body: JSON.stringify({ ingredients: ingredientIds }),
+          body: JSON.stringify({ ingredients: pickedIngredients }),
         });
         if (!response.ok) {
           throw new Error(`Ошибка: ${response.status}`);
@@ -38,29 +47,40 @@ const BurgerConstructor = () => {
     };
 
     fetchData().then(() => setModalType(ModalType.ORDER));
-  }, [ingredients, setModalType]);
+  }, [pickedIngredients, setModalType]);
 
   const closeModal = useCallback(() => {
     setModalType(null);
   }, [setModalType]);
 
   const total = useMemo(() => {
-    return ingredients.reduce((total: number, ingredient: IngredientDTO) => {
-      return total + ingredient.price;
-    }, 0);
-  }, [ingredients]);
+    return pickedIngredients.reduce(
+      (total: number, ingredient: IngredientDTO) => {
+        return ingredient.type === "bun"
+          ? total + 2 * ingredient.price
+          : total + ingredient.price;
+      },
+      0
+    );
+  }, [pickedIngredients]);
 
   return (
     <section className="constructor">
-      <OrderItems items={ingredients} />
-      <div className="checkout">
-        <Price price={total} classes="mr-3" />
-        <div onClick={openOrderModal}>
-          <Button type="primary" size="medium">
-            Оформить заказ
-          </Button>
+      {pickedIngredients && pickedIngredients.length > 0 && (
+        <div>
+          <OrderItems items={pickedIngredients} />
+          <div className="checkout">
+            <Price price={total} classes="mr-3" />
+            {pickedIngredientsState.isBun && (
+              <div onClick={openOrderModal}>
+                <Button type="primary" size="medium">
+                  Оформить заказ
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
       {modalType === ModalType.ORDER && (
         <OrderDetails orderNumber={orderNumber} onClose={closeModal} />
       )}

@@ -84,6 +84,8 @@ const BurgerIngredients = (props: BurgerIngredientsProps) => {
                     item.type === activeTab.value && (
                       <li key={item._id} className="list-item">
                         <Ingredient
+                          type={item.type}
+                          _id={item._id}
                           image_large={item.image_large}
                           onClick={openIngredientModal}
                           image={item.image}

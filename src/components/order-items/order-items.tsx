@@ -19,6 +19,8 @@ const OrderItems = ({ items }: OrderItemsProps) => {
     <div>
       {bun && (
         <OrderItem
+          type={bun.type}
+          _id={bun._id}
           classes="item-first mr-5 mb-2"
           isLocked={true}
           image={bun.image}
@@ -30,13 +32,21 @@ const OrderItems = ({ items }: OrderItemsProps) => {
       <ul className="order-scrollable">
         {stuffing.map((item, index) => (
           <li key={index} className="list-item">
-            <OrderItem image={item.image} name={item.name} price={item.price} />
+            <OrderItem
+              type={item.type}
+              _id={item._id}
+              image={item.image}
+              name={item.name}
+              price={item.price}
+            />
           </li>
         ))}
       </ul>
 
       {bun && (
         <OrderItem
+          type={bun.type}
+          _id={bun._id}
           classes="item-last mr-5 mt-2 mb-4"
           isLocked={true}
           image={bun.image}
