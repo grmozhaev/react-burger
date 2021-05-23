@@ -16,3 +16,7 @@
   top: 0;
   right: 0;
 }
+
+.ingredient__price {
+  justify-content: center;
+}

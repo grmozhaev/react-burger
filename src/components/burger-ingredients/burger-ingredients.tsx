@@ -1,7 +1,7 @@
 import Ingredient from "../ingredient/ingredient";
 import { useState, useCallback } from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
-import { IngredientProps } from "../ingredient/ingredient";
+import { IngredientDTO } from "../ingredient/ingredient";
 import { ModalType } from "../modal/modal";
 import "./burger-ingredients.css";
 import IngredientDetails from "../ingredient-details/ingredient-details";
@@ -22,7 +22,7 @@ const tabs = [
 ];
 
 interface BurgerIngredientsProps {
-  ingredients: IngredientProps[];
+  ingredients: IngredientDTO[];
 }
 
 const BurgerIngredients = (props: BurgerIngredientsProps) => {
@@ -84,6 +84,8 @@ const BurgerIngredients = (props: BurgerIngredientsProps) => {
                     item.type === activeTab.value && (
                       <li key={item._id} className="list-item">
                         <Ingredient
+                          type={item.type}
+                          _id={item._id}
                           image_large={item.image_large}
                           onClick={openIngredientModal}
                           image={item.image}

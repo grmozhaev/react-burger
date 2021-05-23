@@ -21,7 +21,3 @@
 .list-item {
   list-style-type: none;
 }
-
-.list-item:last-of-type div {
-  margin-bottom: 0;
-}
