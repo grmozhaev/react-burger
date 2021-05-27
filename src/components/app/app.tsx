@@ -1,45 +1,23 @@
-import { useState, useEffect, useReducer } from "react";
+import { useEffect } from 'react';
+import { useSelector, useDispatch, RootStateOrAny } from 'react-redux';
 
-import AppHeader from "../app-header/app-header";
-import BurgerConstructor from "../burger-constructor/burger-constructor";
-import BurgerIngredients from "../burger-ingredients/burger-ingredients";
+import AppHeader from '../app-header/app-header';
+import BurgerConstructor from '../burger-constructor/burger-constructor';
+import BurgerIngredients from '../burger-ingredients/burger-ingredients';
+import { getIngredients } from '../../services/actions/constructor';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 
-import {
-  IngredientListContext,
-  PickedIngredientContext,
-} from "../../services/ingredientContext";
-import { reducer } from "../../services/reducers/constructor";
-import { IngredientDTO } from "../ingredient/ingredient";
-
-import "./app.css";
-const initialState = { ingredients: [], isBun: false };
+import './app.css';
 
 const App = () => {
-  const [ingredients, setIngredients] = useState<IngredientDTO[]>([]);
-
-  const [pickedIngredientsState, pickedIngredientsDispatcher] = useReducer(
-    reducer,
-    initialState
-  );
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const url = "https://norma.nomoreparties.space/api/ingredients";
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`Ошибка: ${response.status}`);
-        }
+    dispatch(getIngredients());
+  }, [dispatch]);
 
-        const result = await response.json();
-        setIngredients(result.data);
-      } catch (e) {
-        console.error(e);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const { ingredients } = useSelector((state: RootStateOrAny) => state.root);
 
   return (
     <div className="app">
@@ -49,18 +27,14 @@ const App = () => {
       <p className="text text_type_main-large subtitle mb-3 mt-3">
         Соберите бургер
       </p>
-      <IngredientListContext.Provider value={ingredients}>
-        <PickedIngredientContext.Provider
-          value={{ pickedIngredientsState, pickedIngredientsDispatcher }}
-        >
-          {ingredients.length > 0 && (
-            <div className="burger-container">
-              <BurgerIngredients ingredients={ingredients} />
-              <BurgerConstructor />
-            </div>
-          )}
-        </PickedIngredientContext.Provider>
-      </IngredientListContext.Provider>
+      {ingredients.length > 0 && (
+        <DndProvider backend={HTML5Backend}>
+          <div className="burger-container">
+            <BurgerIngredients />
+            <BurgerConstructor />
+          </div>
+        </DndProvider>
+      )}
     </div>
   );
 };

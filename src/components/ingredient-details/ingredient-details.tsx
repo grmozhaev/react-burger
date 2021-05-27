@@ -1,21 +1,26 @@
-import Modal from "../modal/modal";
-import { IngredientDTO } from "../ingredient/ingredient";
-import "./ingredient-details.css";
-import "../modal/modal.css";
+import { RootStateOrAny, useSelector } from 'react-redux';
+
+import Modal from '../modal/modal';
+import { IngredientDTO } from '../ingredient/ingredient';
+
+import './ingredient-details.css';
+import '../modal/modal.css';
 
 interface IngredientDetailsProps {
-  ingredients: IngredientDTO[];
   onClose: () => void;
-  ingredientName: string;
 }
 
 const IngredientDetails = (props: IngredientDetailsProps) => {
-  const { ingredients, ingredientName, onClose } = props;
+  const { ingredients, ingredientName } = useSelector(
+    (store: RootStateOrAny) => store.root
+  );
+
+  const { onClose } = props;
   return (
     <Modal header="Детали ингредиента" onClose={onClose}>
       <div className="modal-container">
         {ingredients.map(
-          (item, index) =>
+          (item: IngredientDTO, index: number) =>
             item.name === ingredientName && (
               <div key={index} className="info-container-item">
                 <img

@@ -1,53 +1,65 @@
-import { useCallback, useState, useMemo, useContext } from "react";
-import { Button } from "@ya.praktikum/react-developer-burger-ui-components";
-import Price from "../price/price";
-import OrderDetails from "../order-details/order-details";
-import OrderItems from "../order-items/order-items";
-import { IngredientDTO } from "../ingredient/ingredient";
-import { ModalType } from "../modal/modal";
+import { useCallback, useState, useMemo } from 'react';
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
+import { useDrop } from 'react-dnd';
+
+import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
+
+import Price from '../price/price';
+import OrderDetails from '../order-details/order-details';
+import OrderItems from '../order-items/order-items';
+import { IngredientDTO } from '../ingredient/ingredient';
+import { ModalType } from '../modal/modal';
 import {
-  PickedIngredientContext,
-  IngredientListContext,
-} from "../../services/ingredientContext";
-import "./burger-constructor.css";
+  getOrderNumber,
+  BurgerConstructorIngredientProps,
+} from '../../services/actions/constructor';
+
+import './burger-constructor.css';
 
 const BurgerConstructor = () => {
+  const dispatch = useDispatch();
   const [modalType, setModalType] = useState<ModalType | null>(null);
-  const { pickedIngredientsState } = useContext(PickedIngredientContext);
-  const ingredients = useContext(IngredientListContext);
-  const [orderNumber, setOrderNumber] = useState(0);
+  const { ingredients, isBun, orderNumber, pickedIngredientIds } = useSelector(
+    (state: RootStateOrAny) => state.root
+  );
 
-  const pickedIngredients = useMemo(() => {
-    return pickedIngredientsState.ingredients
-      .map((item) => ingredients.filter((el) => el._id === item.id))
-      .flat();
-  }, [ingredients, pickedIngredientsState]);
+  const [{ isHover }, dropTarget] = useDrop({
+    accept: 'ingredient',
+    collect: (monitor) => ({
+      isHover: monitor.isOver() ? ' onHover' : '',
+    }),
+    drop(item: BurgerConstructorIngredientProps) {
+      dispatch({
+        type: 'PICK_INGREDIENT',
+        pickedIngredient: { type: item.type, id: item._id },
+      });
+      dispatch({
+        type: 'INCREASE_ITEM',
+        pickedIngredient: { type: item.type, id: item._id },
+      });
+    },
+  });
+
+  const pickedIngredients: BurgerConstructorIngredientProps[] = useMemo(() => {
+    const merged = [];
+
+    for (let i = 0; i < pickedIngredientIds.length; i++) {
+      merged.push({
+        ...pickedIngredientIds[i],
+        ...ingredients.find(
+          (item: IngredientDTO) => item._id === pickedIngredientIds[i].id
+        ),
+        index: pickedIngredientIds[i].type === 'bun' ? -1 : i,
+      });
+    }
+
+    return merged;
+  }, [pickedIngredientIds, ingredients]);
 
   const openOrderModal = useCallback(() => {
-    const fetchData = async () => {
-      const url = "https://norma.nomoreparties.space/api/orders";
-
-      try {
-        const response = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json;charset=utf-8",
-          },
-          body: JSON.stringify({ ingredients: pickedIngredients }),
-        });
-        if (!response.ok) {
-          throw new Error(`Ошибка: ${response.status}`);
-        }
-
-        const result = await response.json();
-        setOrderNumber(result.order.number);
-      } catch (e) {
-        console.error(e);
-      }
-    };
-
-    fetchData().then(() => setModalType(ModalType.ORDER));
-  }, [pickedIngredients, setModalType]);
+    dispatch(getOrderNumber(pickedIngredients));
+    setModalType(ModalType.ORDER);
+  }, [dispatch, pickedIngredients, setModalType]);
 
   const closeModal = useCallback(() => {
     setModalType(null);
@@ -55,8 +67,8 @@ const BurgerConstructor = () => {
 
   const total = useMemo(() => {
     return pickedIngredients.reduce(
-      (total: number, ingredient: IngredientDTO) => {
-        return ingredient.type === "bun"
+      (total: number, ingredient: BurgerConstructorIngredientProps) => {
+        return ingredient.type === 'bun'
           ? total + 2 * ingredient.price
           : total + ingredient.price;
       },
@@ -64,14 +76,16 @@ const BurgerConstructor = () => {
     );
   }, [pickedIngredients]);
 
+  const classNames = `constructor${isHover}`;
+
   return (
-    <section className="constructor">
+    <section className={classNames} ref={dropTarget}>
       {pickedIngredients && pickedIngredients.length > 0 && (
         <div>
           <OrderItems items={pickedIngredients} />
           <div className="checkout">
             <Price price={total} classes="mr-3" />
-            {pickedIngredientsState.isBun && (
+            {isBun && (
               <div onClick={openOrderModal}>
                 <Button type="primary" size="medium">
                   Оформить заказ

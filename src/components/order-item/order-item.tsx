@@ -1,23 +1,22 @@
-import { useContext } from "react";
 import {
   CloseIcon,
   LockIcon,
   DragIcon,
-} from "@ya.praktikum/react-developer-burger-ui-components";
-import Price from "../price/price";
-import "./order-item.css";
-import { IngredientDTO } from "../ingredient/ingredient";
-import { PickedIngredientContext } from "../../services/ingredientContext";
+} from '@ya.praktikum/react-developer-burger-ui-components';
+import Price from '../price/price';
+import './order-item.css';
+import { useDispatch } from 'react-redux';
+import { BurgerConstructorIngredientProps } from '../../services/actions/constructor';
 
-const OrderItem = (props: IngredientDTO) => {
-  const { type, _id, image, name, price, classes, isLocked } = props;
-  const classNames = classes ? `item ${classes}` : "item ml-2 mb-2";
-  const { pickedIngredientsDispatcher } = useContext(PickedIngredientContext);
+const OrderItem = (props: BurgerConstructorIngredientProps) => {
+  const { type, _id, image, name, price, classes, isLocked, index } = props;
+  const classNames = classes ? `item ${classes}` : 'item ml-2 mb-2';
+  const dispatch = useDispatch();
 
   const handleDelete = () => {
-    pickedIngredientsDispatcher({
-      type: "DELETE_INGREDIENT",
-      ingredient: { type, id: _id },
+    dispatch({
+      type: 'DELETE_INGREDIENT',
+      pickedIngredient: { type, id: _id, index },
     });
   };
 
