@@ -1,13 +1,11 @@
-import { useCallback, useMemo } from 'react';
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
+import { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import { useDrag } from 'react-dnd';
 
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import Price from '../price/price';
 import './ingredient.css';
-
-import { CounterProps } from '../../services/actions/constructor';
 
 export interface IngredientDTO {
   image: string;
@@ -22,6 +20,7 @@ export interface IngredientDTO {
   carbohydrates?: number;
   classes?: string;
   isLocked?: boolean;
+  counter: number;
 }
 
 export interface BurgerIngredientProps extends IngredientDTO {
@@ -29,16 +28,10 @@ export interface BurgerIngredientProps extends IngredientDTO {
 }
 
 const Ingredient = (props: BurgerIngredientProps) => {
-  const { counter } = useSelector((state: RootStateOrAny) => state.root);
   const dispatch = useDispatch();
-  const { _id, image, type, name, price, onClick } = props;
+  const { _id, image, type, name, price, onClick, counter } = props;
 
-  const ingredientCount = useMemo(() => {
-    return counter.filter((count: CounterProps) => count.id === _id)[0]
-      ?.counter;
-  }, [_id, counter]);
-
-  const [{ opacity }, ref] = useDrag({
+  const [style, ref] = useDrag({
     type: 'ingredient',
     item: { type, _id },
     collect: (monitor) => ({
@@ -47,29 +40,22 @@ const Ingredient = (props: BurgerIngredientProps) => {
   });
 
   const handleClick = useCallback(() => {
-    onClick(name);
+    onClick(_id);
     dispatch({
-      type: 'INCREASE_ITEM',
-      pickedIngredient: { type, id: _id },
+      type: 'INCREASE_ITEM_COUNT',
+      pickedIngredient: { id: _id },
     });
 
     dispatch({
       type: 'PICK_INGREDIENT',
-      pickedIngredient: { type, id: _id },
+      pickedIngredient: { id: _id },
     });
-  }, [dispatch, name, onClick, _id, type]);
+  }, [dispatch, onClick, _id]);
 
   return (
-    <div
-      className="ingredient"
-      onClick={handleClick}
-      ref={ref}
-      style={{ opacity }}
-    >
+    <div className="ingredient" onClick={handleClick} ref={ref} style={style}>
       <div className="ingredient-icon">
-        {ingredientCount > 0 && (
-          <Counter count={ingredientCount} size="default" />
-        )}
+        {counter > 0 && <Counter count={counter} size="default" />}
       </div>
       <img src={image} alt={name} />
       <Price price={price} classes="mb-1 ingredient__price" />

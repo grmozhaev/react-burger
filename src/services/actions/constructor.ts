@@ -1,85 +1,78 @@
-import { IngredientDTO } from '../../components/ingredient/ingredient';
-import { ThunkDispatch } from 'redux-thunk'
-import { AnyAction } from 'redux';
+import { IngredientDTO } from "../../components/ingredient/ingredient";
+import { ThunkDispatch } from "redux-thunk";
+import { AnyAction } from "redux";
+import { createOrder, fetchIngredients } from "../api";
 
 export interface IngredientsProps {
-    type: string;
-    id: string;
-    index: number;
+  id: string;
+  index: number;
 }
 
 export interface BurgerConstructorIngredientProps extends IngredientDTO {
-    index: number;
-    moveCard?: (dragIndex: number, hoverIndex: number) => void;
+  index: number;
+  moveCard?: (dragIndex: number, hoverIndex: number) => void;
 }
 
-export interface CounterProps {
-    id: string;
-    counter: number;
-    type: string;
+export interface ConstructorState {
+  ingredients: Record<string, IngredientDTO>;
+  pickedIngredientIds: string[];
+  ingredientsFailed: boolean;
+  ingredientsRequest: boolean;
+  orderNumber: number | null;
+  selectedIngredientId: number | null;
+  counter: Record<string, number>;
 }
 
-export interface PickedIngredientsState {
-    ingredients: IngredientDTO[];
-    pickedIngredientIds: IngredientsProps[];
-    isBun: boolean;
-    ingredientsFailed: boolean;
-    ingredientsRequest: boolean;
-    orderNumber: number | null;
-    ingredientName: string | null;
-    counter: CounterProps[];
+export type ConstructorAction =
+  | { type: ConstructorActionType.PICK_INGREDIENT; pickedIngredient: IngredientsProps }
+  | { type: ConstructorActionType.DELETE_INGREDIENT; pickedIngredient: IngredientsProps}
+  | { type: ConstructorActionType.GET_INGREDIENTS_REQUEST }
+  | { type: ConstructorActionType.GET_INGREDIENTS_SUCCESS; ingredients: Record<string, IngredientDTO> }
+  | { type: ConstructorActionType.GET_INGREDIENTS_FAILED }
+  | { type: ConstructorActionType.GET_ORDER_NUMBER_REQUEST }
+  | { type: ConstructorActionType.GET_ORDER_NUMBER_SUCCESS; orderNumber: number | null }
+  | { type: ConstructorActionType.GET_ORDER_NUMBER_FAILED }
+  | { type: ConstructorActionType.VIEW_INGREDIENT_DETAILS; selectedIngredientId: string }
+  | { type: ConstructorActionType.REMOVE_INGREDIENT_DETAILS }
+  | { type: ConstructorActionType.INCREASE_ITEM_COUNT; pickedIngredient: IngredientsProps }
+  | { type: ConstructorActionType.MOVE_ITEM; dragIndex: number; hoverIndex: number };
+
+export enum ConstructorActionType {
+  PICK_INGREDIENT = "PICK_INGREDIENT",
+  DELETE_INGREDIENT = "DELETE_INGREDIENT",
+  GET_INGREDIENTS_REQUEST = "GET_INGREDIENTS_REQUEST",
+  GET_INGREDIENTS_SUCCESS = "GET_INGREDIENTS_SUCCESS",
+  GET_INGREDIENTS_FAILED = "GET_INGREDIENTS_FAILED",
+  GET_ORDER_NUMBER_REQUEST = "GET_ORDER_NUMBER_REQUEST",
+  GET_ORDER_NUMBER_SUCCESS = "GET_ORDER_NUMBER_SUCCESS",
+  GET_ORDER_NUMBER_FAILED = "GET_ORDER_NUMBER_FAILED",
+  VIEW_INGREDIENT_DETAILS = "VIEW_INGREDIENT_DETAILS",
+  REMOVE_INGREDIENT_DETAILS = "REMOVE_INGREDIENT_DETAILS",
+  INCREASE_ITEM_COUNT = "INCREASE_ITEM_COUNT",
+  MOVE_ITEM = "MOVE_ITEM",
 }
 
-export type Action = 
-| { type: "PICK_INGREDIENT"; pickedIngredient: IngredientsProps } 
-| { type: "DELETE_INGREDIENT"; pickedIngredient: IngredientsProps }
-| { type: "GET_INGREDIENTS_REQUEST" }
-| { type: "GET_INGREDIENTS_SUCCESS"; ingredients: IngredientDTO[] }
-| { type: "GET_INGREDIENTS_FAILED" }
-| { type: "GET_ORDER_NUMBER_REQUEST" }
-| { type: "GET_ORDER_NUMBER_SUCCESS", orderNumber: number | null }
-| { type: "GET_ORDER_NUMBER_FAILED" }
-| { type: "VIEW_INGREDIENT_DETAILS"; ingredientName: string}
-| { type: "REMOVE_INGREDIENT_DETAILS"}
-| { type: "INCREASE_ITEM"; pickedIngredient: IngredientsProps}
-| { type: "MOVE_ITEM"; dragIndex: number, hoverIndex: number}
+export const getIngredients =
+  () => async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
+    dispatch({ type: "GET_INGREDIENTS_REQUEST" });
 
-export const getIngredients = () => async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
-    dispatch({ type: 'GET_INGREDIENTS_REQUEST' });
-        
-    const url = 'https://norma.nomoreparties.space/api/ingredients';
     try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            dispatch({ type: 'GET_INGREDIENTS_FAILED' })
-        }
-
-        const result = await response.json();
-        dispatch({ type: 'GET_INGREDIENTS_SUCCESS', ingredients: result.data })
+      const ingredients = await fetchIngredients();
+      dispatch({ type: "GET_INGREDIENTS_SUCCESS", ingredients });
     } catch (e) {
-        dispatch({ type: 'GET_INGREDIENTS_FAILED' })
-    }  
-}
-
-export const getOrderNumber = (pickedIngredients: BurgerConstructorIngredientProps[]) => async (dispatch: ThunkDispatch<{},{}, AnyAction>) => {
-    dispatch({ type: 'GET_ORDER_NUMBER_REQUEST' });
-    
-    const url = 'https://norma.nomoreparties.space/api/orders';  
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8',
-            },
-            body: JSON.stringify({ ingredients: pickedIngredients }),
-        });
-        if (!response.ok) {
-            dispatch({type: 'GET_ORDER_NUMBER_FAILED'})
-        }
-        
-        const result = await response.json();
-        dispatch({ type: 'GET_ORDER_NUMBER_SUCCESS', orderNumber: result.order.number })
-    } catch (e) {
-        dispatch({ type: 'GET_ORDER_NUMBER_FAILED' })
+      dispatch({ type: "GET_INGREDIENTS_FAILED" });
     }
-}
+  };
+
+export const getOrderNumber =
+  (pickedIngredientIds: string[]) =>
+  async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
+    dispatch({ type: "GET_ORDER_NUMBER_REQUEST" });
+
+    try {
+      const orderNumber = await createOrder(pickedIngredientIds);
+      dispatch({ type: "GET_ORDER_NUMBER_SUCCESS", orderNumber });
+    } catch (e) {
+      dispatch({ type: "GET_ORDER_NUMBER_FAILED" });
+    }
+  };

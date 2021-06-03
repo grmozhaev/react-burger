@@ -1,42 +1,51 @@
-import { Action, PickedIngredientsState } from "../actions/constructor";
-import update from 'immutability-helper';
+import { ConstructorAction, ConstructorState } from "../actions/constructor";
+import update from "immutability-helper";
+import { IngredientDTO } from "../../components/ingredient/ingredient";
 
-const initialState: PickedIngredientsState = { 
-  ingredients: [], 
-  pickedIngredientIds: [], 
-  isBun: false,
+const initialState: ConstructorState = {
+  ingredients: {},
+  pickedIngredientIds: [],
   ingredientsFailed: false,
   ingredientsRequest: false,
   orderNumber: null,
-  ingredientName: null,
-  counter: []
+  selectedIngredientId: null,
+  counter: {},
 };
 
-export const constructorReducer = (state = initialState, action: Action) => {
+export const doesBurgerHaveBun = (pickedIds: string[],ingredients: Record<string, IngredientDTO>) => {
+  return Boolean(
+    pickedIds.find(
+      (id) =>
+        Object.keys(ingredients).filter(
+          (ingredient) => ingredient === id && ingredients[id].type === "bun"
+        ).length
+    )
+  );
+};
+
+export const constructorReducer = (state = initialState,action: ConstructorAction) => {
   switch (action.type) {
     case "PICK_INGREDIENT":
-      if ((action.pickedIngredient.type === "bun" && !state.isBun) || action.pickedIngredient.type !== "bun") {
+      if (
+        (state.ingredients[action.pickedIngredient.id].type === "bun" &&
+          !doesBurgerHaveBun(state.pickedIngredientIds, state.ingredients)) ||
+        state.ingredients[action.pickedIngredient.id].type !== "bun"
+      ) {
         return {
           ...state,
-          isBun: action.pickedIngredient.type !== "bun" ? state.isBun : true,
           pickedIngredientIds: [
             ...state.pickedIngredientIds,
-            {
-              type: action.pickedIngredient.type,
-              id: action.pickedIngredient.id,
-              index: action.pickedIngredient.index,
-            },
+            action.pickedIngredient.id,
           ],
         };
       } else {
         return {
           ...state,
           pickedIngredientIds: [
-            ...state.pickedIngredientIds.map((item) =>
-              item.type === "bun"
-                ? { type: item.type, id: action.pickedIngredient.id, index: action.pickedIngredient.index }
-                : item
+            ...state.pickedIngredientIds.filter(
+              (id) => state.ingredients[id].type !== "bun"
             ),
+            action.pickedIngredient.id,
           ],
         };
       }
@@ -45,18 +54,23 @@ export const constructorReducer = (state = initialState, action: Action) => {
       return {
         ...state,
         pickedIngredientIds: [
-          ...state.pickedIngredientIds.filter((item, index) => index !== action.pickedIngredient.index)
+          ...state.pickedIngredientIds.filter(
+            (item, index) => index !== action.pickedIngredient.index
+          ),
         ],
-        counter: [
-          ...state.counter.map(item => 
-            item.id === action.pickedIngredient.id ? {...item, counter: item.counter - 1} : item
-          )]
+        counter: {
+          ...state.counter,
+          [action.pickedIngredient.id]:
+            state.counter[action.pickedIngredient.id] > 0
+              ? state.counter[action.pickedIngredient.id] - 1
+              : state.counter[action.pickedIngredient.id],
+        },
       };
-      
-    case "GET_INGREDIENTS_REQUEST": 
+
+    case "GET_INGREDIENTS_REQUEST":
       return {
         ...state,
-        ingredientsRequest: true
+        ingredientsRequest: true,
       };
 
     case "GET_INGREDIENTS_SUCCESS":
@@ -66,99 +80,95 @@ export const constructorReducer = (state = initialState, action: Action) => {
         ingredientsFailed: false,
         ingredientsRequest: false,
       };
-    
-    case 'GET_INGREDIENTS_FAILED': 
-      return { 
-        ...state, 
-        ingredientsFailed: true, 
-        ingredientsRequest: false 
+
+    case "GET_INGREDIENTS_FAILED":
+      return {
+        ...state,
+        ingredientsFailed: true,
+        ingredientsRequest: false,
       };
-    
-    case 'GET_ORDER_NUMBER_REQUEST': 
-      return { 
-        ...state, 
-        orderNumber: null, 
-        orderNumberRequest: true 
-      }; 
-    
-    case 'GET_ORDER_NUMBER_SUCCESS': 
-      return { 
-        ...state, 
-        orderNumber: action.orderNumber, 
-        orderNumberFailed: false, 
-        orderNumberRequest: false 
-      }; 
-    
-    case 'GET_ORDER_NUMBER_FAILED': 
-      return { 
-        ...state, 
-        orderNumberFailed: true, 
-        orderNumberRequest: false 
-      }; 
 
-    case 'VIEW_INGREDIENT_DETAILS':
-      return { ...state, ingredientName: action.ingredientName};
+    case "GET_ORDER_NUMBER_REQUEST":
+      return {
+        ...state,
+        orderNumber: null,
+        orderNumberRequest: true,
+      };
 
-    case 'REMOVE_INGREDIENT_DETAILS':
-      return { ...state, ingredientName: null};
+    case "GET_ORDER_NUMBER_SUCCESS":
+      return {
+        ...state,
+        orderNumber: action.orderNumber,
+        orderNumberFailed: false,
+        orderNumberRequest: false,
+      };
 
-    case 'INCREASE_ITEM':
-      const isBun = action.pickedIngredient.type === 'bun';
-      const itemFound = state.counter.find(item => item.id === action.pickedIngredient.id);
-      const bunFound = state.counter.find(item => item.type === action.pickedIngredient.type);
+    case "GET_ORDER_NUMBER_FAILED":
+      return {
+        ...state,
+        orderNumberFailed: true,
+        orderNumberRequest: false,
+      };
 
-      if((!isBun && !itemFound) || (isBun && !bunFound)) {
-        return { 
-          ...state, 
-          counter: [
-            ...state.counter,
-            { 
-              id: action.pickedIngredient.id, 
-              type: action.pickedIngredient.type, 
-              counter: 1 
-            }
-          ]
-        }
-      }
+    case "VIEW_INGREDIENT_DETAILS":
+      return { ...state, selectedIngredientId: action.selectedIngredientId };
 
-      if (!isBun && itemFound) {
-          return { 
-            ...state, 
-            counter: [
-              ...state.counter.map(item => (
-                item.id === action.pickedIngredient.id ? {...item, counter: item.counter + 1} : item
-              ))
-            ]
-          }
-        }
+    case "REMOVE_INGREDIENT_DETAILS":
+      return { ...state, selectedIngredientId: null };
 
-      if (isBun && bunFound) {
+    case "INCREASE_ITEM_COUNT":
+      const isThisBun = state.ingredients[action.pickedIngredient.id].type === "bun";
+      const alreadyPicked = state.counter[action.pickedIngredient.id] !== undefined;
+      const anotherBunFoundId = Object.keys(state.ingredients).find((id) =>
+          id !== action.pickedIngredient.id && state.ingredients[id].type === "bun"
+      );
+
+      if ((!isThisBun && !alreadyPicked) || (isThisBun && !anotherBunFoundId)) {
         return {
           ...state,
-          counter: [
-            ...state.counter.map(item => (
-              item.type === 'bun' ? { ...item, id: action.pickedIngredient.id } : item
-            ))
-          ]
-        }          
+          counter: {
+            ...state.counter,
+            [action.pickedIngredient.id]: 1,
+          },
+        };
+      }
+
+      if (!isThisBun && alreadyPicked) {
+        return {
+          ...state,
+          counter: {
+            ...state.counter,
+            [action.pickedIngredient.id]:
+              state.counter[action.pickedIngredient.id] + 1,
+          },
+        };
+      }
+
+      if (isThisBun && anotherBunFoundId) {
+        return {
+          ...state,
+          counter: {
+            ...state.counter,
+            [anotherBunFoundId]: 0,
+            [action.pickedIngredient.id]: 1,
+          },
+        };
       }
 
       return state;
 
-    case 'MOVE_ITEM':
+    case "MOVE_ITEM":
       const newPickedIngredientIds = update(state.pickedIngredientIds, {
         $splice: [
           [action.dragIndex, 1],
           [action.hoverIndex, 0, state.pickedIngredientIds[action.dragIndex]],
         ],
-      })
-      
+      });
+
       return {
         ...state,
-        pickedIngredientIds: [
-          ...newPickedIngredientIds
-        ]
-      }
+        pickedIngredientIds: [...newPickedIngredientIds],
+      };
 
     default:
       return state;

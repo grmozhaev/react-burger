@@ -1,31 +1,12 @@
-import {
-  CloseIcon,
-  LockIcon,
-  DragIcon,
-} from '@ya.praktikum/react-developer-burger-ui-components';
-import Price from '../price/price';
-import { useDispatch } from 'react-redux';
-import {
-  IngredientsProps,
-  BurgerConstructorIngredientProps,
-} from '../../services/actions/constructor';
-
 import { useRef } from 'react';
 import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
 
-const OrderItemSortable = (props: BurgerConstructorIngredientProps) => {
-  const { type, _id, image, name, price, classes, isLocked, index, moveCard } =
-    props;
-  const classNames = classes ? `item ${classes}` : 'item ml-2 mb-2';
-  const dispatch = useDispatch();
+import OrderItem, { OrderItemProps } from '../order-item/order-item';
+import { IngredientsProps } from '../../services/actions/constructor';
 
-  const handleDelete = () => {
-    dispatch({
-      type: 'DELETE_INGREDIENT',
-      pickedIngredient: { type, id: _id, index },
-    });
-  };
+const OrderItemSortable = (props: OrderItemProps) => {
+  const { type, _id, image, name, price, index, moveCard } = props;
 
   const ref = useRef<HTMLDivElement>(null);
   const [{ handlerId }, drop] = useDrop({
@@ -36,32 +17,22 @@ const OrderItemSortable = (props: BurgerConstructorIngredientProps) => {
       };
     },
     hover(item: IngredientsProps, monitor: DropTargetMonitor) {
-      if (!ref.current) {
-        return;
-      }
+      if (!ref.current) return;
+
       const dragIndex = item.index;
       const hoverIndex = index;
 
-      if (dragIndex === hoverIndex) {
-        return;
-      }
+      if (dragIndex === hoverIndex) return;
 
       const hoverBoundingRect = ref.current?.getBoundingClientRect();
-
       const hoverMiddleY =
         (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-
       const clientOffset = monitor.getClientOffset();
-
       const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
 
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return;
-      }
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
 
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return;
-      }
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
 
       if (moveCard) moveCard(dragIndex, hoverIndex);
 
@@ -69,44 +40,30 @@ const OrderItemSortable = (props: BurgerConstructorIngredientProps) => {
     },
   });
 
-  const [{ isDragging }, drag] = useDrag({
+  const [style, drag] = useDrag({
     type: 'sortable-item',
     item: () => {
       return { _id, index };
     },
     collect: (monitor: any) => ({
-      isDragging: monitor.isDragging(),
+      opacity: monitor.isDragging() ? 0.5 : 1,
     }),
   });
 
-  const opacity = isDragging ? 0 : 1;
   drag(drop(ref));
 
   return (
-    <div
-      ref={ref}
-      style={{ opacity }}
-      className="order-scrollable-container ml-4"
+    <OrderItem
+      innerRef={ref}
+      style={style}
       data-handler-id={handlerId}
-    >
-      {!isLocked && (
-        <div className="mb-1">
-          <DragIcon type="primary" />
-        </div>
-      )}
-      <div className={classNames}>
-        <img src={image} className="item-image" alt="ingredient" />
-        <p className="item-name">{name}</p>
-        <Price price={price} classes="mr-7 order-item__price" />
-        <div className="mr-7 remove-icon">
-          {isLocked ? (
-            <LockIcon type="secondary" />
-          ) : (
-            <CloseIcon type="primary" onClick={handleDelete} />
-          )}
-        </div>
-      </div>
-    </div>
+      index={index}
+      type={type}
+      _id={_id}
+      image={image}
+      name={name}
+      price={price}
+    />
   );
 };
 

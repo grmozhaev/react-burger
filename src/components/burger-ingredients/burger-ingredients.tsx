@@ -1,13 +1,13 @@
 import Ingredient from '../ingredient/ingredient';
 import { useState, useCallback } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { IngredientDTO } from '../ingredient/ingredient';
 import { ModalType } from '../modal/modal';
 import './burger-ingredients.css';
 import IngredientDetails from '../ingredient-details/ingredient-details';
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Link, Element } from 'react-scroll';
+import { RootState } from '../../services/reducers';
 
 const tabs = [
   {
@@ -25,15 +25,17 @@ const tabs = [
 ];
 
 const BurgerIngredients = () => {
-  const { ingredients } = useSelector((store: RootStateOrAny) => store.root);
+  const { ingredients, counter } = useSelector(
+    (store: RootState) => store.root
+  );
   const [state, setState] = useState({ activeTab: tabs[0].label });
   const [modalType, setModalType] = useState<ModalType | null>(null);
   const dispatch = useDispatch();
 
   const openIngredientModal = useCallback(
-    (ingredientName) => {
+    (selectedIngredientId) => {
       setModalType(ModalType.PICKED_INGREDIENT);
-      dispatch({ type: 'VIEW_INGREDIENT_DETAILS', ingredientName });
+      dispatch({ type: 'VIEW_INGREDIENT_DETAILS', selectedIngredientId });
     },
     [setModalType, dispatch]
   );
@@ -94,22 +96,24 @@ const BurgerIngredients = () => {
                 </li>
 
                 <ul className="ingredients-list p-2">
-                  {ingredients.map(
-                    (item: IngredientDTO, index: number) =>
-                      item.type === activeTab.value && (
-                        <li key={item._id} className="list-item">
+                  {Object.keys(ingredients).map((id: string) => {
+                    return (
+                      ingredients[id].type === activeTab.value && (
+                        <li key={id} className="list-item">
                           <Ingredient
-                            type={item.type}
-                            _id={item._id}
-                            image_large={item.image_large}
+                            type={ingredients[id].type}
+                            _id={id}
+                            image_large={ingredients[id].image_large}
                             onClick={openIngredientModal}
-                            image={item.image}
-                            name={item.name}
-                            price={item.price}
+                            image={ingredients[id].image}
+                            name={ingredients[id].name}
+                            price={ingredients[id].price}
+                            counter={counter[id]}
                           />
                         </li>
                       )
-                  )}
+                    );
+                  })}
                 </ul>
               </ul>
             </Element>
