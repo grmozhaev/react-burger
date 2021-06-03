@@ -1,51 +1,57 @@
-import Ingredient from "../ingredient/ingredient";
-import { useState, useCallback } from "react";
-import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
-import { IngredientDTO } from "../ingredient/ingredient";
-import { ModalType } from "../modal/modal";
-import "./burger-ingredients.css";
-import IngredientDetails from "../ingredient-details/ingredient-details";
+import Ingredient from '../ingredient/ingredient';
+import { useState, useCallback } from 'react';
+import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
+import { ModalType } from '../modal/modal';
+import './burger-ingredients.css';
+import IngredientDetails from '../ingredient-details/ingredient-details';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { Link, Element } from 'react-scroll';
+import { RootState } from '../../services/reducers';
 
 const tabs = [
   {
-    label: "Булки",
-    value: "bun",
+    label: 'Булки',
+    value: 'bun',
   },
   {
-    label: "Соусы",
-    value: "sauce",
+    label: 'Соусы',
+    value: 'sauce',
   },
   {
-    label: "Начинки",
-    value: "main",
+    label: 'Начинки',
+    value: 'main',
   },
 ];
 
-interface BurgerIngredientsProps {
-  ingredients: IngredientDTO[];
-}
-
-const BurgerIngredients = (props: BurgerIngredientsProps) => {
+const BurgerIngredients = () => {
+  const { ingredients, counter } = useSelector(
+    (store: RootState) => store.root
+  );
   const [state, setState] = useState({ activeTab: tabs[0].label });
   const [modalType, setModalType] = useState<ModalType | null>(null);
-  let [ingredientName, setIngredientName] = useState<string>("");
+  const dispatch = useDispatch();
 
   const openIngredientModal = useCallback(
-    (name) => {
+    (selectedIngredientId) => {
       setModalType(ModalType.PICKED_INGREDIENT);
-      setIngredientName(name);
+      dispatch({ type: 'VIEW_INGREDIENT_DETAILS', selectedIngredientId });
     },
-    [setModalType]
+    [setModalType, dispatch]
   );
 
   const closeModal = useCallback(() => {
     setModalType(null);
-    setIngredientName("");
-  }, [setModalType]);
+    dispatch({ type: 'REMOVE_INGREDIENT_DETAILS' });
+  }, [setModalType, dispatch]);
 
   const handleTabClick = (activeTab: string) => {
     setState({ activeTab });
     document.querySelector(`#${activeTab}`)?.scrollIntoView();
+  };
+
+  const handleSetActive = (activeTab: string) => {
+    setState({ activeTab });
   };
 
   return (
@@ -54,58 +60,68 @@ const BurgerIngredients = (props: BurgerIngredientsProps) => {
         <div className="tabs">
           {tabs.map((tabName) => {
             return (
-              <Tab
-                active={state.activeTab === tabName.label}
+              <Link
+                containerId="tabs-container"
                 key={tabName.value}
-                value={tabName.label}
-                onClick={handleTabClick}
+                to={tabName.label}
+                spy={true}
+                smooth={true}
+                duration={200}
+                onSetActive={handleSetActive}
               >
-                {tabName.label}
-              </Tab>
+                <Tab
+                  active={state.activeTab === tabName.label}
+                  key={tabName.value}
+                  value={tabName.label}
+                  onClick={handleTabClick}
+                >
+                  {tabName.label}
+                </Tab>
+              </Link>
             );
           })}
         </div>
 
-        <div className="ingredients-scrollable">
-          {tabs.map((activeTab) => (
-            <ul key={activeTab.label} className="ingredients-list mt-2">
-              <li className="list-item">
-                <p
-                  id={`${activeTab.label}`}
-                  className="text text_type_main-medium"
-                >
-                  {activeTab.label}
-                </p>
-              </li>
+        <div className="ingredients-scrollable" id="tabs-container">
+          {tabs.map((activeTab, index) => (
+            <Element name={activeTab.label} key={activeTab.label}>
+              <ul className="ingredients-list mt-2">
+                <li key={`${activeTab.label}-${index}`} className="list-item">
+                  <p
+                    id={`${activeTab.label}`}
+                    className="text text_type_main-medium"
+                  >
+                    {activeTab.label}
+                  </p>
+                </li>
 
-              <ul className="ingredients-list p-2">
-                {props.ingredients.map(
-                  (item) =>
-                    item.type === activeTab.value && (
-                      <li key={item._id} className="list-item">
-                        <Ingredient
-                          type={item.type}
-                          _id={item._id}
-                          image_large={item.image_large}
-                          onClick={openIngredientModal}
-                          image={item.image}
-                          name={item.name}
-                          price={item.price}
-                        />
-                      </li>
-                    )
-                )}
+                <ul className="ingredients-list p-2">
+                  {Object.keys(ingredients).map((id: string) => {
+                    return (
+                      ingredients[id].type === activeTab.value && (
+                        <li key={id} className="list-item">
+                          <Ingredient
+                            type={ingredients[id].type}
+                            _id={id}
+                            image_large={ingredients[id].image_large}
+                            onClick={openIngredientModal}
+                            image={ingredients[id].image}
+                            name={ingredients[id].name}
+                            price={ingredients[id].price}
+                            counter={counter[id]}
+                          />
+                        </li>
+                      )
+                    );
+                  })}
+                </ul>
               </ul>
-            </ul>
+            </Element>
           ))}
         </div>
 
         {modalType === ModalType.PICKED_INGREDIENT && (
-          <IngredientDetails
-            ingredients={props.ingredients}
-            ingredientName={ingredientName}
-            onClose={closeModal}
-          />
+          <IngredientDetails onClose={closeModal} />
         )}
       </div>
     </section>

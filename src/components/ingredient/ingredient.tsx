@@ -1,8 +1,11 @@
-import Price from "../price/price";
-import { Counter } from "@ya.praktikum/react-developer-burger-ui-components";
-import "./ingredient.css";
-import { useCallback, useContext } from "react";
-import { PickedIngredientContext } from "../../services/ingredientContext";
+import { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import { useDrag } from 'react-dnd';
+
+import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
+
+import Price from '../price/price';
+import './ingredient.css';
 
 export interface IngredientDTO {
   image: string;
@@ -10,13 +13,14 @@ export interface IngredientDTO {
   name: string;
   price: number;
   type: string;
-  _id: number;
+  _id: string;
   calories?: number;
   proteins?: number;
   fat?: number;
   carbohydrates?: number;
   classes?: string;
   isLocked?: boolean;
+  counter: number;
 }
 
 export interface BurgerIngredientProps extends IngredientDTO {
@@ -24,21 +28,32 @@ export interface BurgerIngredientProps extends IngredientDTO {
 }
 
 const Ingredient = (props: BurgerIngredientProps) => {
-  const counter = 0;
-  const { _id, image, type, name, price, onClick } = props;
-  const { pickedIngredientsDispatcher } = useContext(PickedIngredientContext);
+  const dispatch = useDispatch();
+  const { _id, image, type, name, price, onClick, counter } = props;
+
+  const [style, ref] = useDrag({
+    type: 'ingredient',
+    item: { type, _id },
+    collect: (monitor) => ({
+      opacity: monitor.isDragging() ? 0.5 : 1,
+    }),
+  });
 
   const handleClick = useCallback(() => {
-    onClick(name);
-
-    pickedIngredientsDispatcher({
-      type: "PICK_INGREDIENT",
-      ingredient: { type, id: _id },
+    onClick(_id);
+    dispatch({
+      type: 'INCREASE_ITEM_COUNT',
+      pickedIngredient: { id: _id },
     });
-  }, [name, onClick, pickedIngredientsDispatcher, _id, type]);
+
+    dispatch({
+      type: 'PICK_INGREDIENT',
+      pickedIngredient: { id: _id },
+    });
+  }, [dispatch, onClick, _id]);
 
   return (
-    <div className="ingredient" onClick={handleClick}>
+    <div className="ingredient" onClick={handleClick} ref={ref} style={style}>
       <div className="ingredient-icon">
         {counter > 0 && <Counter count={counter} size="default" />}
       </div>
@@ -50,18 +65,3 @@ const Ingredient = (props: BurgerIngredientProps) => {
 };
 
 export default Ingredient;
-
-// if (pickedIngredientIds.filter((item) => item.type === "bun").length > 1) {
-//   const index = pickedIngredientIds.findIndex(
-//     (item) => item.type === "bun"
-//   );
-//   console.log({ index });
-
-//   setPickedIngredientIds([
-//     ...pickedIngredientIds.slice(0, index),
-//     ...pickedIngredientIds.slice(index + 1),
-//     { type, id: _id },
-//   ]);
-// } else {
-//   setPickedIngredientIds([...pickedIngredientIds, { type, id: _id }]);
-// }

@@ -1,28 +1,50 @@
-import { useContext } from "react";
+import { Ref } from 'react';
 import {
   CloseIcon,
   LockIcon,
   DragIcon,
-} from "@ya.praktikum/react-developer-burger-ui-components";
-import Price from "../price/price";
-import "./order-item.css";
-import { IngredientDTO } from "../ingredient/ingredient";
-import { PickedIngredientContext } from "../../services/ingredientContext";
+} from '@ya.praktikum/react-developer-burger-ui-components';
+import Price from '../price/price';
+import './order-item.css';
+import { useDispatch } from 'react-redux';
+import { Identifier } from 'dnd-core';
 
-const OrderItem = (props: IngredientDTO) => {
-  const { type, _id, image, name, price, classes, isLocked } = props;
-  const classNames = classes ? `item ${classes}` : "item ml-2 mb-2";
-  const { pickedIngredientsDispatcher } = useContext(PickedIngredientContext);
+export interface OrderItemProps {
+  image: string;
+  name: string;
+  price: number;
+  type: string;
+  _id: string;
+  index: number;
+  classes?: string;
+  isLocked?: boolean;
+  innerRef?: Ref<HTMLDivElement>;
+  'data-handler-id'?: Identifier | null;
+  style?: Record<string, number>;
+  moveCard?: (dragIndex: number, hoverIndex: number) => void;
+}
+
+const OrderItem = (props: OrderItemProps) => {
+  const { _id, image, name, price, classes, isLocked, index, innerRef, style } =
+    props;
+
+  const classNames = classes ? `item ${classes}` : 'item ml-2 mb-2';
+  const dispatch = useDispatch();
 
   const handleDelete = () => {
-    pickedIngredientsDispatcher({
-      type: "DELETE_INGREDIENT",
-      ingredient: { type, id: _id },
+    dispatch({
+      type: 'DELETE_INGREDIENT',
+      pickedIngredient: { id: _id, index },
     });
   };
 
   return (
-    <div className="order-scrollable-container ml-4">
+    <div
+      ref={innerRef}
+      style={style}
+      className="order-scrollable-container ml-4"
+      data-handler-id={props['data-handler-id']}
+    >
       {!isLocked && (
         <div className="mb-1">
           <DragIcon type="primary" />

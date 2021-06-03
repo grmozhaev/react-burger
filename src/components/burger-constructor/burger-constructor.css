@@ -10,3 +10,7 @@
   width: 650px;
   height: 520px;
 }
+
+.onHover {
+  box-shadow: inset 0px -2px 0px #3c39ec;
+}
