@@ -1,0 +1,11 @@
+.profile-container {
+  display: flex;
+}
+
+.profile-input-fields {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 480px;
+  margin-top: 65px;
+}

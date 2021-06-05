@@ -32,3 +32,39 @@ export const createOrder = async (pickedIngredientIds: string[]) => {
   const result = await response.json();
   return result.order.number;
 };
+
+export const resetPassword = async (email: string) => {
+  const url = 'https://norma.nomoreparties.space/api/password-reset';
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify({ email }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error: ${response.status}`);
+  }
+
+  const result = await response.json();
+  return result.success;
+}
+
+export const setNewPassword = async (newPassword: string, token: string) => {
+  const url = 'https://norma.nomoreparties.space/api/password-reset/reset';
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify({ password: newPassword, token }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error: ${response.status}`);
+  }
+
+  const result = await response.json();
+  return result.success;
+}
