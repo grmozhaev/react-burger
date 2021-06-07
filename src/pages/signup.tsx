@@ -1,11 +1,12 @@
-import React, { ChangeEvent } from 'react';
+import React, { useCallback, ChangeEvent } from 'react';
 import {
   EmailInput,
   PasswordInput,
   Button,
   Input,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import { createUser } from '../services/api';
 
 import './forgot-password.css';
 
@@ -13,6 +14,7 @@ export const SignupPage = () => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [name, setName] = React.useState('');
+  const history = useHistory();
 
   const onEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -25,6 +27,15 @@ export const SignupPage = () => {
   const onNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
+
+  const onSignup = useCallback(async () => {
+    try {
+      await createUser(name, email, password);
+      history.push('/profile');
+    } catch (error) {
+      console.error(error);
+    }
+  }, [email, history, name, password]);
 
   return (
     <div className="input-fields-container">
@@ -51,7 +62,7 @@ export const SignupPage = () => {
         />
       </div>
       <div className="button">
-        <Button type="primary">Зарегистрироваться</Button>
+        <Button type="primary" onClick={onSignup}>Зарегистрироваться</Button>
       </div>
       <div className="links-container">
         <p className="text text_type_main-default mt-20 mb-4">

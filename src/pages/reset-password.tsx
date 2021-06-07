@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { useCallback, ChangeEvent } from 'react';
 import {
   Input,
   Button,
@@ -20,14 +20,14 @@ export const ResetPasswordPage = () => {
     setToken(e.target.value);
   };
 
-  const handleSetNewPassword = async () => {
+  const handleSetNewPassword = useCallback(async () => {
     try {
       await setNewPassword(password, token);
       history.push('/login');
     } catch (error) {
-      console.error({ error });
+      console.error(error);
     }
-  };
+  }, [history, password, token]);
 
   return (
     <div className="input-fields-container">

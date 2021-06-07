@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { useCallback, ChangeEvent } from 'react';
 import {
   Input,
   Button,
@@ -16,14 +16,14 @@ export const ForgotPasswordPage = () => {
     setEmail(e.target.value);
   };
 
-  const handleResetPassword = async () => {
+  const handleResetPassword = useCallback(async () => {
     try {
       await resetPassword(email);
       history.push('/reset-password');
     } catch (error) {
-      console.error({ error });
+      console.error(error);
     }
-  };
+  }, [email, history]);
 
   return (
     <div className="input-fields-container">
