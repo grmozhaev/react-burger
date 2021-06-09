@@ -1,5 +1,5 @@
-import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import "./price.css";
+import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import './price.css';
 
 interface PriceProps {
   price: number;

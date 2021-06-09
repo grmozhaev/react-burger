@@ -1,0 +1,17 @@
+.profile-sidebar-container {
+  width: 320px;
+  margin-top: 70px;
+}
+
+.profile-link {
+  text-decoration: none;
+  display: block;
+}
+
+.profile-explainer {
+  opacity: 0.4;
+}
+
+.profile-active-tab {
+  color: #fff;
+}

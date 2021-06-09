@@ -1,42 +1,64 @@
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-
 import AppHeader from '../app-header/app-header';
-import BurgerConstructor from '../burger-constructor/burger-constructor';
-import BurgerIngredients from '../burger-ingredients/burger-ingredients';
-import { getIngredients } from '../../services/actions/constructor';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DndProvider } from 'react-dnd';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {
+  HomePage,
+  FeedPage,
+  OrderStatusPage,
+  LoginPage,
+  SignupPage,
+  ForgotPasswordPage,
+  ResetPasswordPage,
+  ProfilePage,
+  OrderHistoryPage,
+  NotFoundPage,
+} from '../../pages';
 
 import './app.css';
-import { RootState } from '../../services/reducers';
 
 const App = () => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getIngredients());
-  }, [dispatch]);
-
-  const { ingredients } = useSelector((state: RootState) => state.root);
-
   return (
-    <div className="app">
-      <header className="app-header">
-        <AppHeader />
-      </header>
-      <p className="text text_type_main-large subtitle mb-3 mt-3">
-        Соберите бургер
-      </p>
-      {Object.keys(ingredients).length > 0 && (
-        <DndProvider backend={HTML5Backend}>
-          <div className="burger-container">
-            <BurgerIngredients />
-            <BurgerConstructor />
-          </div>
-        </DndProvider>
-      )}
-    </div>
+    <Router>
+      <div className="app">
+        <header className="app-header">
+          <AppHeader />
+        </header>
+        <Switch>
+          <Route path="/" exact={true}>
+            <HomePage />
+          </Route>
+          <Route path="/feed" exact={true}>
+            <FeedPage />
+          </Route>
+          <Route path="/feed/:id">
+            <OrderStatusPage />
+          </Route>
+          <Route path="/login">
+            <LoginPage />
+          </Route>
+          <Route path="/register">
+            <SignupPage />
+          </Route>
+          <Route path="/forgot-password">
+            <ForgotPasswordPage />
+          </Route>
+          <Route path="/reset-password">
+            <ResetPasswordPage />
+          </Route>
+          <Route path="/profile" exact={true}>
+            <ProfilePage />
+          </Route>
+          <Route path="/profile/orders" exact={true}>
+            <OrderHistoryPage />
+          </Route>
+          <Route path="/profile/orders/:id">
+            <OrderStatusPage />
+          </Route>
+          <Route>
+            <NotFoundPage />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 };
 

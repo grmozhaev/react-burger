@@ -1,0 +1,37 @@
+.order-status-container {
+  margin: 0 auto;
+  width: 640px;
+}
+
+.order-number {
+  text-align: center;
+}
+
+.order-status {
+  color: rgba(0, 204, 204, 1);
+}
+
+.order-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.order-rows-container {
+  overflow: auto;
+  height: 350px;
+}
+
+.order-name {
+  width: 100%;
+  flex: 1;
+}
+
+.order-price {
+  display: flex;
+}
+
+.order-status-date {
+  display: flex;
+  justify-content: space-between;
+}

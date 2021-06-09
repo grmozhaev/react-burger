@@ -19,7 +19,10 @@
   display: flex;
 }
 
+.navlink-active {
+  color: #ffffff;
+}
+
 .navlink {
   text-decoration: none;
-  color: #ffffff;
 }
