@@ -41,7 +41,6 @@ const AppHeader = () => {
           to="/feed"
           className="navlink text_color_inactive"
           activeClassName="navlink-active"
-          exact={true}
         >
           <Feed />
         </NavLink>

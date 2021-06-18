@@ -1,9 +1,12 @@
 import { combineReducers } from "redux";
 import { ConstructorState } from "../actions/constructor";
-import { constructorReducer } from './constructor';
+import { AuthState } from "../actions/auth";
+import { constructorReducer } from './constructor/constructor';
+import { authReducer } from './auth/auth';
 
-export const rootReducer = combineReducers({
+export const appReducer = combineReducers({
     root: constructorReducer,
+    auth: authReducer,
 })
 
-export interface RootState{ root: ConstructorState };
+export interface AppState{ root: ConstructorState, auth: AuthState };

@@ -1,16 +1,21 @@
-import React, { ChangeEvent } from 'react';
+import React, { useState, useCallback, ChangeEvent } from 'react';
 import {
   EmailInput,
   PasswordInput,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import { signin } from '../services/actions/auth';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppState } from '../services/reducers';
 
 import './forgot-password.css';
 
 export const LoginPage = () => {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const dispatch = useDispatch();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { isUserLoaded } = useSelector((store: AppState) => store.auth);
 
   const onEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -19,6 +24,18 @@ export const LoginPage = () => {
   const onPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
+
+  const onSignin = useCallback(() => {
+    try {
+      dispatch(signin(email, password));
+    } catch (error) {
+      console.error(error);
+    }
+  }, [dispatch, email, password]);
+
+  if (isUserLoaded) {
+    return <Redirect to={{ pathname: '/' }} />;
+  }
 
   return (
     <div className="input-fields-container">
@@ -34,13 +51,15 @@ export const LoginPage = () => {
         />
       </div>
       <div className="button">
-        <Button type="primary">Войти</Button>
+        <Button type="primary" onClick={onSignin}>
+          Войти
+        </Button>
       </div>
       <div className="links-container">
         <p className="text text_type_main-default mt-20 mb-4">
           Вы — новый пользователь?{' '}
           <Link to="/register" className="link-decoration">
-            <span className="text text_type_main-default link-color">
+            <span className="text text_type_main-default link-color__violet">
               Зарегистрироваться
             </span>
           </Link>
@@ -48,7 +67,7 @@ export const LoginPage = () => {
         <p className="text text_type_main-default">
           Забыли пароль?{' '}
           <Link to="/forgot-password" className="link-decoration">
-            <span className="text text_type_main-default link-color">
+            <span className="text text_type_main-default link-color__violet">
               Восстановить пароль
             </span>
           </Link>

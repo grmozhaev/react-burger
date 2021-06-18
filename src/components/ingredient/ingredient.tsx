@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
 import { useDrag } from 'react-dnd';
 
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -24,12 +22,11 @@ export interface IngredientDTO {
 }
 
 export interface BurgerIngredientProps extends IngredientDTO {
-  onClick: (name: string) => void;
+  'data-testid': string;
 }
 
 const Ingredient = (props: BurgerIngredientProps) => {
-  const dispatch = useDispatch();
-  const { _id, image, type, name, price, onClick, counter } = props;
+  const { _id, image, type, name, price, counter } = props;
 
   const [style, ref] = useDrag({
     type: 'ingredient',
@@ -39,21 +36,13 @@ const Ingredient = (props: BurgerIngredientProps) => {
     }),
   });
 
-  const handleClick = useCallback(() => {
-    onClick(_id);
-    dispatch({
-      type: 'INCREASE_ITEM_COUNT',
-      pickedIngredient: { id: _id },
-    });
-
-    dispatch({
-      type: 'PICK_INGREDIENT',
-      pickedIngredient: { id: _id },
-    });
-  }, [dispatch, onClick, _id]);
-
   return (
-    <div className="ingredient" onClick={handleClick} ref={ref} style={style}>
+    <div
+      className="ingredient"
+      ref={ref}
+      style={style}
+      data-testid={props['data-testid']}
+    >
       <div className="ingredient-icon">
         {counter > 0 && <Counter count={counter} size="default" />}
       </div>

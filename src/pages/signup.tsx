@@ -5,8 +5,12 @@ import {
   Button,
   Input,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, useHistory } from 'react-router-dom';
-import { createUser } from '../services/api';
+import { Link, Redirect } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+
+import { signup } from '../services/actions/auth';
+import { AppState } from '../services/reducers';
 
 import './forgot-password.css';
 
@@ -14,7 +18,10 @@ export const SignupPage = () => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [name, setName] = React.useState('');
+  const { isUserLoaded } = useSelector((store: AppState) => store.auth);
   const history = useHistory();
+
+  const dispatch = useDispatch();
 
   const onEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -30,12 +37,18 @@ export const SignupPage = () => {
 
   const onSignup = useCallback(async () => {
     try {
-      await createUser(name, email, password);
-      history.push('/profile');
+      dispatch(signup(name, email, password, history));
+      // if (!signupFailed) {
+      //   history.push('/');
+      // }
     } catch (error) {
       console.error(error);
     }
-  }, [email, history, name, password]);
+  }, [dispatch, email, name, password, history]);
+
+  if (isUserLoaded) {
+    return <Redirect to={{ pathname: '/' }} />;
+  }
 
   return (
     <div className="input-fields-container">
@@ -62,13 +75,15 @@ export const SignupPage = () => {
         />
       </div>
       <div className="button">
-        <Button type="primary" onClick={onSignup}>Зарегистрироваться</Button>
+        <Button type="primary" onClick={onSignup}>
+          Зарегистрироваться
+        </Button>
       </div>
       <div className="links-container">
         <p className="text text_type_main-default mt-20 mb-4">
           Уже зарегистрированы?{' '}
           <Link to="/login" className="link-decoration">
-            <span className="text text_type_main-default link-color">
+            <span className="text text_type_main-default link-color__violet">
               Войти
             </span>
           </Link>

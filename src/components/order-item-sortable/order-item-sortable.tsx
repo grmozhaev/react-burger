@@ -54,6 +54,7 @@ const OrderItemSortable = (props: OrderItemProps) => {
 
   return (
     <OrderItem
+      data-testid={props['data-testid']}
       innerRef={ref}
       style={style}
       data-handler-id={handlerId}

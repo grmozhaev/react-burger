@@ -1,6 +1,6 @@
-import Modal from "../modal/modal";
-import "./order-details.css";
-import "../modal/modal.css";
+import Modal from '../modal/modal';
+import './order-details.css';
+import '../modal/modal.css';
 
 interface OrderDetailsProps {
   onClose: () => void;

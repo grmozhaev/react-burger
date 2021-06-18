@@ -1,8 +1,8 @@
-import { ConstructorAction, ConstructorState } from "../actions/constructor";
+import { ConstructorAction, ConstructorState } from "../../actions/constructor";
 import update from "immutability-helper";
-import { IngredientDTO } from "../../components/ingredient/ingredient";
+import { IngredientDTO } from "../../../components/ingredient/ingredient";
 
-const initialState: ConstructorState = {
+export const initialConstructorState: ConstructorState = {
   ingredients: {},
   pickedIngredientIds: [],
   ingredientsFailed: false,
@@ -23,7 +23,7 @@ export const doesBurgerHaveBun = (pickedIds: string[],ingredients: Record<string
   );
 };
 
-export const constructorReducer = (state = initialState,action: ConstructorAction) => {
+export const constructorReducer = (state = initialConstructorState, action: ConstructorAction) => {
   switch (action.type) {
     case "PICK_INGREDIENT":
       if (
@@ -71,6 +71,7 @@ export const constructorReducer = (state = initialState,action: ConstructorActio
       return {
         ...state,
         ingredientsRequest: true,
+        ingredientsFailed: false,
       };
 
     case "GET_INGREDIENTS_SUCCESS":
@@ -109,12 +110,6 @@ export const constructorReducer = (state = initialState,action: ConstructorActio
         orderNumberFailed: true,
         orderNumberRequest: false,
       };
-
-    case "VIEW_INGREDIENT_DETAILS":
-      return { ...state, selectedIngredientId: action.selectedIngredientId };
-
-    case "REMOVE_INGREDIENT_DETAILS":
-      return { ...state, selectedIngredientId: null };
 
     case "INCREASE_ITEM_COUNT":
       const isThisBun = state.ingredients[action.pickedIngredient.id].type === "bun";

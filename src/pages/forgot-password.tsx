@@ -3,7 +3,10 @@ import {
   Input,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, Redirect, useHistory, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
+import { AppState } from '../services/reducers';
 import { resetPassword } from '../services/api';
 
 import './forgot-password.css';
@@ -11,6 +14,8 @@ import './forgot-password.css';
 export const ForgotPasswordPage = () => {
   const [email, setEmail] = React.useState('');
   const history = useHistory();
+  const location = useLocation();
+  const { isUserLoaded } = useSelector((store: AppState) => store.auth);
 
   const onEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -19,11 +24,15 @@ export const ForgotPasswordPage = () => {
   const handleResetPassword = useCallback(async () => {
     try {
       await resetPassword(email);
-      history.push('/reset-password');
+      history.push('/reset-password', { background: location });
     } catch (error) {
       console.error(error);
     }
-  }, [email, history]);
+  }, [email, history, location]);
+
+  if (isUserLoaded) {
+    return <Redirect to={{ pathname: '/' }} />;
+  }
 
   return (
     <div className="input-fields-container">
@@ -46,7 +55,7 @@ export const ForgotPasswordPage = () => {
         <p className="text text_type_main-default text_color_inactive mt-20 mb-4">
           Вспомнили пароль?{' '}
           <Link to="/login" className="link-decoration">
-            <span className="text text_type_main-default link-color">
+            <span className="text text_type_main-default link-color__violet">
               Войти
             </span>
           </Link>

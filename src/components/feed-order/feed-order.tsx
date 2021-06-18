@@ -1,4 +1,4 @@
-import { useHistory, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Price from '../price/price';
 
 import './feed-order.css';
@@ -61,33 +61,36 @@ interface OrderProps {
 
 export const Order = (props: OrderProps) => {
   const { ingredients, showStatus } = props;
-  const history = useHistory();
-  const { pathname } = useLocation();
-
-  const handleOrderClick = () => {
-    history.push(`${pathname}/34535`);
-  };
+  const location = useLocation();
 
   return (
-    <div className="order-bubble mb-6" onClick={handleOrderClick}>
-      <div className="order-number-and-date p-6">
-        <span className="text text_type_digits-default">#034535</span>
-        <span className="text text_type_main-default text_color_inactive">
-          Сегодня, 16:20 i-GMT+3
-        </span>
-      </div>
-      <p className="text text_type_main-medium pl-6 pr-6">
-        Death Star Starship Main бургер
-      </p>
-      {showStatus && (
-        <p className="text text_type_main-default mt-2 pl-6 order-status">
-          Выполнен
+    <div className="order-bubble mb-6">
+      <Link
+        to={{
+          pathname: `${location.pathname}/34535`,
+          state: { from: location },
+        }}
+        className="link-decoration link-color__white"
+      >
+        <div className="order-number-and-date p-6">
+          <span className="text text_type_digits-default">#034535</span>
+          <span className="text text_type_main-default text_color_inactive">
+            Сегодня, 16:20 i-GMT+3
+          </span>
+        </div>
+        <p className="text text_type_main-medium pl-6 pr-6">
+          Death Star Starship Main бургер
         </p>
-      )}
-      <div className="order-ingredients-pics pl-6 pr-2 mt-6">
-        {ingredientImages(ingredients)}
-        <Price price={540} />
-      </div>
+        {showStatus && (
+          <p className="text text_type_main-default mt-2 pl-6 order-status">
+            Выполнен
+          </p>
+        )}
+        <div className="order-ingredients-pics pl-6 pr-2 mt-6">
+          {ingredientImages(ingredients)}
+          <Price price={540} />
+        </div>
+      </Link>
     </div>
   );
 };
