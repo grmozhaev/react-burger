@@ -35,16 +35,17 @@ export const SignupPage = () => {
     setName(e.target.value);
   };
 
-  const onSignup = useCallback(async () => {
-    try {
-      dispatch(signup(name, email, password, history));
-      // if (!signupFailed) {
-      //   history.push('/');
-      // }
-    } catch (error) {
-      console.error(error);
-    }
-  }, [dispatch, email, name, password, history]);
+  const onSignup = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      try {
+        dispatch(signup(name, email, password, history));
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [dispatch, email, name, password, history]
+  );
 
   if (isUserLoaded) {
     return <Redirect to={{ pathname: '/' }} />;
@@ -55,30 +56,28 @@ export const SignupPage = () => {
       <p className="text text_type_main-default mb-6 align-subtitle">
         Регистрация
       </p>
-      <div className="align-forms mb-6">
-        <Input
-          type={'text'}
-          placeholder={'Имя'}
-          onChange={onNameChange}
-          value={name}
-          name={'name'}
-        />
-      </div>
-      <div className="align-forms mb-6">
-        <EmailInput onChange={onEmailChange} value={email} name={'email'} />
-      </div>
-      <div className="align-forms mb-6">
+      <form className="align-forms" onSubmit={onSignup}>
+        <div className="mb-6">
+          <Input
+            type={'text'}
+            placeholder={'Имя'}
+            onChange={onNameChange}
+            value={name}
+            name={'name'}
+          />
+        </div>
+        <div className="mb-6">
+          <EmailInput onChange={onEmailChange} value={email} name={'email'} />
+        </div>
         <PasswordInput
           onChange={onPasswordChange}
           value={password}
           name={'password'}
         />
-      </div>
-      <div className="button">
-        <Button type="primary" onClick={onSignup}>
-          Зарегистрироваться
-        </Button>
-      </div>
+        <div className="button">
+          <Button type="primary">Зарегистрироваться</Button>
+        </div>
+      </form>
       <div className="links-container">
         <p className="text text_type_main-default mt-20 mb-4">
           Уже зарегистрированы?{' '}

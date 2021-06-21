@@ -25,13 +25,17 @@ export const LoginPage = () => {
     setPassword(e.target.value);
   };
 
-  const onSignin = useCallback(() => {
-    try {
-      dispatch(signin(email, password));
-    } catch (error) {
-      console.error(error);
-    }
-  }, [dispatch, email, password]);
+  const onSignin = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      try {
+        dispatch(signin(email, password));
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [dispatch, email, password]
+  );
 
   if (isUserLoaded) {
     return <Redirect to={{ pathname: '/' }} />;
@@ -40,21 +44,19 @@ export const LoginPage = () => {
   return (
     <div className="input-fields-container">
       <p className="text text_type_main-default mb-6 align-subtitle">Вход</p>
-      <div className="align-forms mb-6">
-        <EmailInput onChange={onEmailChange} value={email} name={'email'} />
-      </div>
-      <div className="align-forms mb-6">
+      <form className="align-forms" onSubmit={onSignin}>
+        <div className="mb-6">
+          <EmailInput onChange={onEmailChange} value={email} name={'email'} />
+        </div>
         <PasswordInput
           onChange={onPasswordChange}
           value={password}
           name={'password'}
         />
-      </div>
-      <div className="button">
-        <Button type="primary" onClick={onSignin}>
-          Войти
-        </Button>
-      </div>
+        <div className="button">
+          <Button type="primary">Войти</Button>
+        </div>
+      </form>
       <div className="links-container">
         <p className="text text_type_main-default mt-20 mb-4">
           Вы — новый пользователь?{' '}

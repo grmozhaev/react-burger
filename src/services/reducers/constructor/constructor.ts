@@ -102,6 +102,8 @@ export const constructorReducer = (state = initialConstructorState, action: Cons
         orderNumber: action.orderNumber,
         orderNumberFailed: false,
         orderNumberRequest: false,
+        pickedIngredientIds: [],
+        counter: {}
       };
 
     case "GET_ORDER_NUMBER_FAILED":

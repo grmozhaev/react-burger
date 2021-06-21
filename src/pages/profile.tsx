@@ -50,14 +50,22 @@ export const ProfilePage = () => {
     setPassword('');
   }, []);
 
-  const handleSaveChange = useCallback(() => {
-    dispatch(editUserInfo(name, login, password));
-  }, [dispatch, name, login, password]);
+  const handleSaveChange = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      try {
+        dispatch(editUserInfo(name, login, password));
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [dispatch, name, login, password]
+  );
 
   return (
     <div className="profile-container">
       <ProfileSidebar />
-      <div className="profile-input-fields ml-15">
+      <form className="profile-input-fields ml-15" onSubmit={handleSaveChange}>
         <div className="mb-6">
           <Input
             type={'text'}
@@ -90,12 +98,10 @@ export const ProfilePage = () => {
             </Button>
           </div>
           <div className="button">
-            <Button type="primary" onClick={handleSaveChange}>
-              Сохранить
-            </Button>
+            <Button type="primary">Сохранить</Button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

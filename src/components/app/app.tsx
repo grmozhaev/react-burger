@@ -1,6 +1,6 @@
 import AppHeader from '../app-header/app-header';
 import { ProtectedRoute } from '../../services/protected-route';
-import { Route, Switch, useLocation } from 'react-router-dom';
+import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import {
   HomePage,
@@ -25,7 +25,15 @@ interface State {
 
 const App = () => {
   const location: Location<State> = useLocation();
-  const from = location?.state && location?.state?.from;
+  const history = useHistory();
+
+  const from =
+    history.action === 'PUSH'
+      ? location?.state?.from
+      : {
+          ...location,
+          state: undefined,
+        };
 
   return (
     <div className="app">

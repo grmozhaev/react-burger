@@ -6,9 +6,10 @@ import { Location } from 'history';
 import { AppState } from '../services/reducers';
 import { getIngredients } from '../services/actions/constructor';
 
-import '../components/ingredient-details/ingredient-details.css';
 import Modal from '../components/modal/modal';
 import { IngredientDTO } from '../components/ingredient/ingredient';
+
+import './ingredient-page.css';
 
 interface State {
   from?: Location;

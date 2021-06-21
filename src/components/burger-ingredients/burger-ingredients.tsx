@@ -54,7 +54,6 @@ const BurgerIngredients = () => {
               >
                 <Tab
                   active={state.activeTab === tabName.label}
-                  key={tabName.value}
                   value={tabName.label}
                   onClick={handleTabClick}
                 >

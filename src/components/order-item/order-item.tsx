@@ -1,9 +1,9 @@
 import { Ref } from 'react';
 import {
-  CloseIcon,
   LockIcon,
   DragIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
+import { DeleteIcon } from '@ya.praktikum/react-developer-burger-ui-components/dist/ui/icons/delete-icon';
 import Price from '../price/price';
 import './order-item.css';
 import { useDispatch } from 'react-redux';
@@ -59,7 +59,7 @@ const OrderItem = (props: OrderItemProps) => {
           {isLocked ? (
             <LockIcon type="secondary" />
           ) : (
-            <CloseIcon type="primary" onClick={handleDelete} />
+            <DeleteIcon type="primary" onClick={handleDelete} />
           )}
         </div>
       </div>

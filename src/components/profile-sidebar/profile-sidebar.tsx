@@ -1,23 +1,20 @@
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
 import { signout } from '../../services/actions/auth';
 
 import './profile-sidebar.css';
 
 const ProfileSidebar = () => {
-  const history = useHistory();
   const dispatch = useDispatch();
 
   const handleSignout = useCallback(() => {
     try {
       dispatch(signout());
-      history.replace('/login');
     } catch (error) {
       console.error(error);
     }
-  }, [dispatch, history]);
+  }, [dispatch]);
 
   return (
     <div className="profile-sidebar-container">
@@ -38,8 +35,7 @@ const ProfileSidebar = () => {
         <p className="text text_type_main-medium">История заказов</p>
       </NavLink>
       <NavLink
-        to="/login"
-        activeClassName="profile-active-tab"
+        to="/profile"
         className="text_color_inactive profile-link mt-4"
         exact
         onClick={handleSignout}
