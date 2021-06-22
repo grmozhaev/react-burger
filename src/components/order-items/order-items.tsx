@@ -46,6 +46,7 @@ const OrderItems = ({ items }: OrderItemsProps) => {
         {stuffing.map((item, index) => (
           <li key={index} className="list-item">
             <OrderItemSortable
+              data-testid={`item-${item.index}`}
               index={item.index}
               type={item.type}
               _id={item._id}

@@ -1,9 +1,9 @@
 import { Ref } from 'react';
 import {
-  CloseIcon,
   LockIcon,
   DragIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
+import { DeleteIcon } from '@ya.praktikum/react-developer-burger-ui-components/dist/ui/icons/delete-icon';
 import Price from '../price/price';
 import './order-item.css';
 import { useDispatch } from 'react-redux';
@@ -22,6 +22,7 @@ export interface OrderItemProps {
   'data-handler-id'?: Identifier | null;
   style?: Record<string, number>;
   moveCard?: (dragIndex: number, hoverIndex: number) => void;
+  'data-testid'?: string;
 }
 
 const OrderItem = (props: OrderItemProps) => {
@@ -54,11 +55,11 @@ const OrderItem = (props: OrderItemProps) => {
         <img src={image} className="item-image" alt="ingredient" />
         <p className="item-name">{name}</p>
         <Price price={price} classes="mr-7 order-item__price" />
-        <div className="mr-7 remove-icon">
+        <div className="mr-7 remove-icon" data-testid={props['data-testid']}>
           {isLocked ? (
             <LockIcon type="secondary" />
           ) : (
-            <CloseIcon type="primary" onClick={handleDelete} />
+            <DeleteIcon type="primary" onClick={handleDelete} />
           )}
         </div>
       </div>

@@ -14,15 +14,18 @@ import {
 } from '../../services/actions/constructor';
 
 import './burger-constructor.css';
-import { RootState } from '../../services/reducers';
-import { doesBurgerHaveBun } from '../../services/reducers/constructor';
+import { AppState } from '../../services/reducers';
+import { doesBurgerHaveBun } from '../../services/reducers/constructor/constructor';
+import { useHistory } from 'react-router-dom';
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const [modalType, setModalType] = useState<ModalType | null>(null);
   const { ingredients, orderNumber, pickedIngredientIds } = useSelector(
-    (state: RootState) => state.root
+    (state: AppState) => state.root
   );
+  const { isUserLoaded } = useSelector((store: AppState) => store.auth);
 
   const [{ isHover }, dropTarget] = useDrop({
     accept: 'ingredient',
@@ -56,9 +59,13 @@ const BurgerConstructor = () => {
   }, [pickedIngredientIds, ingredients]);
 
   const openOrderModal = useCallback(() => {
-    dispatch(getOrderNumber(pickedIngredientIds));
-    setModalType(ModalType.ORDER);
-  }, [dispatch, pickedIngredientIds, setModalType]);
+    if (isUserLoaded) {
+      dispatch(getOrderNumber(pickedIngredientIds));
+      setModalType(ModalType.ORDER);
+    } else {
+      history.push('/login');
+    }
+  }, [dispatch, pickedIngredientIds, setModalType, history, isUserLoaded]);
 
   const closeModal = useCallback(() => {
     setModalType(null);

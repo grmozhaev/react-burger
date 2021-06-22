@@ -1,6 +1,6 @@
 .order-status-container {
   margin: 0 auto;
-  width: 640px;
+  width: 650px;
 }
 
 .order-number {
@@ -19,7 +19,7 @@
 
 .order-rows-container {
   overflow: auto;
-  height: 350px;
+  height: 300px;
 }
 
 .order-name {

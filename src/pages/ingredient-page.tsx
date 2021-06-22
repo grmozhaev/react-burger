@@ -1,26 +1,50 @@
-import { useSelector } from 'react-redux';
+import { useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams, useLocation, useHistory } from 'react-router-dom';
+import { Location } from 'history';
 
-import Modal from '../modal/modal';
+import { AppState } from '../services/reducers';
+import { getIngredients } from '../services/actions/constructor';
 
-import './ingredient-details.css';
-import '../modal/modal.css';
-import { RootState } from '../../services/reducers';
+import Modal from '../components/modal/modal';
+import { IngredientDTO } from '../components/ingredient/ingredient';
 
-interface IngredientDetailsProps {
-  onClose: () => void;
+import './ingredient-page.css';
+
+interface State {
+  from?: Location;
 }
 
-const IngredientDetails = (props: IngredientDetailsProps) => {
-  const ingredient = useSelector((store: RootState) => {
-    if (store.root.selectedIngredientId !== null) {
-      return store.root.ingredients[store.root.selectedIngredientId];
-    }
-    return null;
+export const IngredientPage = () => {
+  const params = useParams<Record<string, string>>();
+  const dispatch = useDispatch();
+  const location: Location<State> = useLocation();
+  const history = useHistory();
+
+  const handleClose = useCallback(() => {
+    history.goBack();
+  }, [history]);
+
+  const from = location?.state?.from?.pathname;
+
+  useEffect(() => {
+    dispatch(getIngredients());
+  }, [dispatch]);
+
+  const ingredient = useSelector((store: AppState) => {
+    return store.root.ingredients[params.id];
   });
 
-  const { onClose } = props;
-  return (
-    <Modal header="Детали ингредиента" onClose={onClose}>
+  const header = 'Детали ингредиента';
+
+  interface IngredientInfoProps {
+    ingredient: IngredientDTO;
+  }
+
+  const IngredientInfo = (props: IngredientInfoProps) => {
+    const { ingredient } = props;
+
+    return (
       <div className="modal-container">
         {ingredient && (
           <div className="info-container-item">
@@ -71,8 +95,18 @@ const IngredientDetails = (props: IngredientDetailsProps) => {
           </div>
         )}
       </div>
-    </Modal>
+    );
+  };
+
+  return (
+    <div>
+      {from === '/' ? (
+        <Modal header={header} onClose={handleClose}>
+          <IngredientInfo ingredient={ingredient} />
+        </Modal>
+      ) : (
+        <IngredientInfo ingredient={ingredient} />
+      )}
+    </div>
   );
 };
-
-export default IngredientDetails;

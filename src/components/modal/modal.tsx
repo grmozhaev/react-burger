@@ -1,7 +1,7 @@
-import React, { FC, useEffect } from "react";
-import ReactDOM from "react-dom";
-import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import "./modal.css";
+import React, { FC, useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import './modal.css';
 
 export interface ModalProps {
   children: React.ReactNode;
@@ -20,7 +20,7 @@ export enum ModalType {
 }
 
 const ModalHeader = ({ header, onClose }: ModalHeaderProps) => {
-  const classes = !header && "modal__no-header-close-icon";
+  const classes = !header && 'modal__no-header-close-icon';
   return (
     <div className="modal__header text text_type_main-large m-4 mt-2">
       {header}
@@ -33,22 +33,22 @@ const ModalHeader = ({ header, onClose }: ModalHeaderProps) => {
 
 const Modal: FC<ModalProps> = (props) => {
   const { children, header, onClose } = props;
-  const modalRoot = document.getElementById("react-modals") as Element;
+  const modalRoot = document.getElementById('react-modals') as Element;
 
   useEffect(() => {
     const handleKeyup = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === 'Escape') onClose();
     };
-    window.addEventListener("keyup", handleKeyup);
+    window.addEventListener('keyup', handleKeyup);
 
     return () => {
-      window.removeEventListener("keyup", handleKeyup);
+      window.removeEventListener('keyup', handleKeyup);
     };
   }, [onClose]);
 
   return ReactDOM.createPortal(
     <div>
-      <div className="modal p-2">
+      <div className="modal p-5">
         <ModalHeader header={header} onClose={onClose} />
         {children}
       </div>

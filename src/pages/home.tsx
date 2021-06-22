@@ -7,7 +7,7 @@ import BurgerConstructor from '../components/burger-constructor/burger-construct
 import BurgerIngredients from '../components/burger-ingredients/burger-ingredients';
 
 import { getIngredients } from '../services/actions/constructor';
-import { RootState } from '../services/reducers';
+import { AppState } from '../services/reducers';
 
 export const HomePage = () => {
   const dispatch = useDispatch();
@@ -16,7 +16,7 @@ export const HomePage = () => {
     dispatch(getIngredients());
   }, [dispatch]);
 
-  const { ingredients } = useSelector((state: RootState) => state.root);
+  const { ingredients } = useSelector((state: AppState) => state.root);
 
   return (
     <div>

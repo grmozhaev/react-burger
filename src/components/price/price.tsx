@@ -10,7 +10,12 @@ const Price = (props: PriceProps) => {
   const { price, classes } = props;
   return (
     <div className={`price-tag ${classes}`}>
-      <p className="text text_type_digits-default mr-1">{price}</p>
+      <p
+        className="text text_type_digits-default mr-1"
+        data-testid="totalAmount"
+      >
+        {price}
+      </p>
       <CurrencyIcon type="primary" />
     </div>
   );

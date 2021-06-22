@@ -32,8 +32,6 @@ export type ConstructorAction =
   | { type: ConstructorActionType.GET_ORDER_NUMBER_REQUEST }
   | { type: ConstructorActionType.GET_ORDER_NUMBER_SUCCESS; orderNumber: number | null }
   | { type: ConstructorActionType.GET_ORDER_NUMBER_FAILED }
-  | { type: ConstructorActionType.VIEW_INGREDIENT_DETAILS; selectedIngredientId: string }
-  | { type: ConstructorActionType.REMOVE_INGREDIENT_DETAILS }
   | { type: ConstructorActionType.INCREASE_ITEM_COUNT; pickedIngredient: IngredientsProps }
   | { type: ConstructorActionType.MOVE_ITEM; dragIndex: number; hoverIndex: number };
 
@@ -46,8 +44,6 @@ export enum ConstructorActionType {
   GET_ORDER_NUMBER_REQUEST = "GET_ORDER_NUMBER_REQUEST",
   GET_ORDER_NUMBER_SUCCESS = "GET_ORDER_NUMBER_SUCCESS",
   GET_ORDER_NUMBER_FAILED = "GET_ORDER_NUMBER_FAILED",
-  VIEW_INGREDIENT_DETAILS = "VIEW_INGREDIENT_DETAILS",
-  REMOVE_INGREDIENT_DETAILS = "REMOVE_INGREDIENT_DETAILS",
   INCREASE_ITEM_COUNT = "INCREASE_ITEM_COUNT",
   MOVE_ITEM = "MOVE_ITEM",
 }
