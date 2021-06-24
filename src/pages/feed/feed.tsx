@@ -1,4 +1,4 @@
-import { Order } from '../components/feed-order/feed-order';
+import { Order } from '../../components/feed-order/feed-order';
 import './feed.css';
 
 const ingredients = [

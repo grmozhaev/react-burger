@@ -6,8 +6,8 @@ import {
 import { Link, Redirect, useHistory, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-import { AppState } from '../services/reducers';
-import { resetPassword } from '../services/api';
+import { AppState } from '../../services/reducers';
+import { resetPassword } from '../../services/api';
 
 import './forgot-password.css';
 

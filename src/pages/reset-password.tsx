@@ -10,7 +10,7 @@ import {
 import { setNewPassword } from '../services/api';
 import { AppState } from '../services/reducers';
 
-import './forgot-password.css';
+import './forgot-password/forgot-password.css';
 import { Location } from 'history';
 
 interface State {

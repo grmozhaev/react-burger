@@ -1,4 +1,4 @@
-import { ConstructorAction, ConstructorState } from "../../actions/constructor";
+import { ConstructorAction, ConstructorActionType as types, ConstructorState } from "../../actions/constructor";
 import update from "immutability-helper";
 import { IngredientDTO } from "../../../components/ingredient/ingredient";
 
@@ -25,7 +25,7 @@ export const doesBurgerHaveBun = (pickedIds: string[],ingredients: Record<string
 
 export const constructorReducer = (state = initialConstructorState, action: ConstructorAction) => {
   switch (action.type) {
-    case "PICK_INGREDIENT":
+    case types.PICK_INGREDIENT:
       if (
         (state.ingredients[action.pickedIngredient.id].type === "bun" &&
           !doesBurgerHaveBun(state.pickedIngredientIds, state.ingredients)) ||
@@ -50,7 +50,7 @@ export const constructorReducer = (state = initialConstructorState, action: Cons
         };
       }
 
-    case "DELETE_INGREDIENT":
+    case types.DELETE_INGREDIENT:
       return {
         ...state,
         pickedIngredientIds: [
@@ -67,14 +67,14 @@ export const constructorReducer = (state = initialConstructorState, action: Cons
         },
       };
 
-    case "GET_INGREDIENTS_REQUEST":
+    case types.GET_INGREDIENTS_REQUEST:
       return {
         ...state,
         ingredientsRequest: true,
         ingredientsFailed: false,
       };
 
-    case "GET_INGREDIENTS_SUCCESS":
+    case types.GET_INGREDIENTS_SUCCESS:
       return {
         ...state,
         ingredients: action.ingredients,
@@ -82,21 +82,21 @@ export const constructorReducer = (state = initialConstructorState, action: Cons
         ingredientsRequest: false,
       };
 
-    case "GET_INGREDIENTS_FAILED":
+    case types.GET_INGREDIENTS_FAILED:
       return {
         ...state,
         ingredientsFailed: true,
         ingredientsRequest: false,
       };
 
-    case "GET_ORDER_NUMBER_REQUEST":
+    case types.GET_ORDER_NUMBER_REQUEST:
       return {
         ...state,
         orderNumber: null,
         orderNumberRequest: true,
       };
 
-    case "GET_ORDER_NUMBER_SUCCESS":
+    case types.GET_ORDER_NUMBER_SUCCESS:
       return {
         ...state,
         orderNumber: action.orderNumber,
@@ -106,14 +106,14 @@ export const constructorReducer = (state = initialConstructorState, action: Cons
         counter: {}
       };
 
-    case "GET_ORDER_NUMBER_FAILED":
+    case types.GET_ORDER_NUMBER_FAILED:
       return {
         ...state,
         orderNumberFailed: true,
         orderNumberRequest: false,
       };
 
-    case "INCREASE_ITEM_COUNT":
+    case types.INCREASE_ITEM_COUNT:
       const isThisBun = state.ingredients[action.pickedIngredient.id].type === "bun";
       const alreadyPicked = state.counter[action.pickedIngredient.id] !== undefined;
       const anotherBunFoundId = Object.keys(state.ingredients).find((id) =>
@@ -154,7 +154,7 @@ export const constructorReducer = (state = initialConstructorState, action: Cons
 
       return state;
 
-    case "MOVE_ITEM":
+    case types.MOVE_ITEM:
       const newPickedIngredientIds = update(state.pickedIngredientIds, {
         $splice: [
           [action.dragIndex, 1],

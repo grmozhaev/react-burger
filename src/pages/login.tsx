@@ -9,7 +9,7 @@ import { signin } from '../services/actions/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../services/reducers';
 
-import './forgot-password.css';
+import './forgot-password/forgot-password.css';
 
 export const LoginPage = () => {
   const dispatch = useDispatch();
