@@ -5,13 +5,13 @@ import {
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 
-import ProfileSidebar from '../components/profile-sidebar/profile-sidebar';
+import ProfileSidebar from '../../components/profile-sidebar/profile-sidebar';
 import { useDispatch } from 'react-redux';
+import { getUser } from '../../services/api';
+import { editUserInfo } from '../../services/actions/auth';
 
-import './forgot-password.css';
+import '../forgot-password/forgot-password.css';
 import './profile.css';
-import { getUser } from '../services/api';
-import { editUserInfo } from '../services/actions/auth';
 
 export const ProfilePage = () => {
   const [login, setLogin] = React.useState('');

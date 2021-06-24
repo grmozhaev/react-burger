@@ -15,7 +15,7 @@ import {
   IngredientPage,
   NotFoundPage,
 } from '../../pages';
-import { OrderStatusModal } from '../order-status-modal/order-status-modal';
+// import { OrderStatusModal } from '../order-status-modal/order-status-modal';
 
 import './app.css';
 
@@ -81,7 +81,7 @@ const App = () => {
 
       {from?.pathname === '/feed' && (
         <Route path="/feed/:id">
-          <OrderStatusModal />
+          <OrderStatusPage />
         </Route>
       )}
 
@@ -93,7 +93,7 @@ const App = () => {
 
       {from?.pathname === '/profile/orders' && (
         <Route path="/profile/orders/:id">
-          <OrderStatusModal />
+          <OrderStatusPage />
         </Route>
       )}
     </div>

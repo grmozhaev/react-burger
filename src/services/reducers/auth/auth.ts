@@ -1,4 +1,4 @@
-import { AuthAction, AuthState } from "../../actions/auth";
+import { AuthAction, AuthActionType as types, AuthState } from "../../actions/auth";
 
 export const initialAuthState: AuthState = {
   email: '',
@@ -19,7 +19,7 @@ export const initialAuthState: AuthState = {
 
 export const authReducer = (state = initialAuthState, action: AuthAction) => {
   switch (action.type) {
-    case 'GET_SIGNUP_REQUEST': {
+    case types.GET_SIGNUP_REQUEST: {
       return {
         ...state,
         signupRequest: true,
@@ -27,7 +27,7 @@ export const authReducer = (state = initialAuthState, action: AuthAction) => {
       }
     }
 
-    case 'GET_SIGNUP_SUCCESS': {
+    case types.GET_SIGNUP_SUCCESS: {
       return {
         ...state,
         email: action.data.email,
@@ -37,7 +37,7 @@ export const authReducer = (state = initialAuthState, action: AuthAction) => {
       }
     }
 
-    case 'GET_SIGNUP_FAILED': {
+    case types.GET_SIGNUP_FAILED: {
       return {
         ...state,
         signupFailed: true,
@@ -45,7 +45,7 @@ export const authReducer = (state = initialAuthState, action: AuthAction) => {
       }
     }
 
-    case 'GET_SIGNIN_REQUEST': {
+    case types.GET_SIGNIN_REQUEST: {
       return {
         ...state,
         signinRequest: true,
@@ -53,7 +53,7 @@ export const authReducer = (state = initialAuthState, action: AuthAction) => {
       }
     }
     
-    case 'GET_SIGNIN_SUCCESS': {
+    case types.GET_SIGNIN_SUCCESS: {
       return {
         ...state,
         email: action.data.email,
@@ -63,7 +63,7 @@ export const authReducer = (state = initialAuthState, action: AuthAction) => {
       }
     }
 
-    case 'GET_SIGNIN_FAILED': {
+    case types.GET_SIGNIN_FAILED: {
       return {
         ...state,
         signinFailed: true,
@@ -71,7 +71,7 @@ export const authReducer = (state = initialAuthState, action: AuthAction) => {
       }
     }
 
-    case 'GET_SIGNOUT_REQUEST': {
+    case types.GET_SIGNOUT_REQUEST: {
       return {
         ...state,
         signoutRequest: true,
@@ -79,7 +79,7 @@ export const authReducer = (state = initialAuthState, action: AuthAction) => {
       }
     }
     
-    case 'GET_SIGNOUT_SUCCESS': {
+    case types.GET_SIGNOUT_SUCCESS: {
       return {
         ...state,
         isUserLoaded: false,
@@ -88,7 +88,7 @@ export const authReducer = (state = initialAuthState, action: AuthAction) => {
       }
     }
 
-    case 'GET_SIGNOUT_FAILED': {
+    case types.GET_SIGNOUT_FAILED: {
       return {
         ...state,
         signoutFailed: true,
@@ -96,7 +96,7 @@ export const authReducer = (state = initialAuthState, action: AuthAction) => {
       }
     }
 
-    case 'EDIT_USER_REQUEST': {
+    case types.EDIT_USER_REQUEST: {
       return {
         ...state,
         editUserRequest: true,
@@ -104,7 +104,7 @@ export const authReducer = (state = initialAuthState, action: AuthAction) => {
       }
     }
     
-    case 'EDIT_USER_SUCCESS': {
+    case types.EDIT_USER_SUCCESS: {
       return {
         ...state,
         email: action.data.email,
@@ -114,7 +114,7 @@ export const authReducer = (state = initialAuthState, action: AuthAction) => {
       }
     }
 
-    case 'EDIT_USER_FAILED': {
+    case types.EDIT_USER_FAILED: {
       return {
         ...state,
         editUserFailed: true,

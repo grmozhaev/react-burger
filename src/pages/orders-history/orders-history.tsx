@@ -1,7 +1,7 @@
-import ProfileSidebar from '../components/profile-sidebar/profile-sidebar';
-import { Order } from '../components/feed-order/feed-order';
+import ProfileSidebar from '../../components/profile-sidebar/profile-sidebar';
+import { Order } from '../../components/feed-order/feed-order';
 
-import './profile.css';
+import '../profile/profile.css';
 import './orders-history.css';
 
 export const OrderHistoryPage = () => {

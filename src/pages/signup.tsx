@@ -12,7 +12,7 @@ import { useHistory } from 'react-router-dom';
 import { signup } from '../services/actions/auth';
 import { AppState } from '../services/reducers';
 
-import './forgot-password.css';
+import './forgot-password/forgot-password.css';
 
 export const SignupPage = () => {
   const [email, setEmail] = React.useState('');

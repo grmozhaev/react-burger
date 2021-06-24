@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useLocation, useHistory } from 'react-router-dom';
 import { Location } from 'history';
 
-import { AppState } from '../services/reducers';
-import { getIngredients } from '../services/actions/constructor';
+import { AppState } from '../../services/reducers';
+import { getIngredients } from '../../services/actions/constructor';
 
-import Modal from '../components/modal/modal';
-import { IngredientDTO } from '../components/ingredient/ingredient';
+import Modal from '../../components/modal/modal';
+import { IngredientDTO } from '../../components/ingredient/ingredient';
 
 import './ingredient-page.css';
 
