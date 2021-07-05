@@ -21,6 +21,10 @@ export interface IngredientDTO {
   counter: number;
 }
 
+export interface IngredientStoreObject {
+  [key: string]: Omit<IngredientDTO, '_id'>;
+}
+
 export interface BurgerIngredientProps extends IngredientDTO {
   'data-testid': string;
 }

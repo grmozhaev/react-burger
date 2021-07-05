@@ -1,4 +1,4 @@
-import { IngredientDTO } from "../../components/ingredient/ingredient";
+import { IngredientDTO, IngredientStoreObject } from "../../components/ingredient/ingredient";
 import { getCookie, setCookie, deleteCookie } from "../utils";
 
 const url = "https://norma.nomoreparties.space/api";
@@ -11,10 +11,21 @@ export const fetchIngredients = async () => {
     throw new Error(result.message);
   }
 
-  return result.data.reduce((acc: Object, item: IngredientDTO) => {
+  return result.data.reduce((acc: IngredientStoreObject, item: IngredientDTO) => {
     const { _id, ...rest } = item;
     return { ...acc, [_id]: { ...rest } };
   }, {});
+};
+
+export const fetchOrder = async (orderId: string) => {
+  const response = await fetch(`${url}/orders/${orderId}`);
+
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.message);
+  }
+
+  return result.orders;
 };
 
 export const createOrder = async (pickedIngredientIds: string[]) => {

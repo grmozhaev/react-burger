@@ -16,7 +16,7 @@ export const HomePage = () => {
     dispatch(getIngredients());
   }, [dispatch]);
 
-  const { ingredients } = useSelector((state: AppState) => state.root);
+  const { ingredients } = useSelector((state: AppState) => state.constructor);
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import React, { useCallback, ChangeEvent } from 'react';
+import React, { useState, useCallback, ChangeEvent } from 'react';
 import {
   Input,
   Button,
@@ -12,7 +12,7 @@ import { resetPassword } from '../../services/api';
 import './forgot-password.css';
 
 export const ForgotPasswordPage = () => {
-  const [email, setEmail] = React.useState('');
+  const [email, setEmail] = useState('');
   const history = useHistory();
   const location = useLocation();
   const { isUserLoaded } = useSelector((store: AppState) => store.auth);

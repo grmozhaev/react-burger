@@ -32,7 +32,7 @@ export const IngredientPage = () => {
   }, [dispatch]);
 
   const ingredient = useSelector((store: AppState) => {
-    return store.root.ingredients[params.id];
+    return store.constructor.ingredients[params.id];
   });
 
   const header = 'Детали ингредиента';

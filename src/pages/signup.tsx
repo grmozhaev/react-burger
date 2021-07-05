@@ -1,4 +1,4 @@
-import React, { useCallback, ChangeEvent } from 'react';
+import React, { useState, useCallback, ChangeEvent } from 'react';
 import {
   EmailInput,
   PasswordInput,
@@ -15,9 +15,9 @@ import { AppState } from '../services/reducers';
 import './forgot-password/forgot-password.css';
 
 export const SignupPage = () => {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [name, setName] = React.useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const { isUserLoaded } = useSelector((store: AppState) => store.auth);
   const history = useHistory();
 

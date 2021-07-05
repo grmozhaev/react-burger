@@ -3,35 +3,53 @@ import { Order } from '../../components/feed-order/feed-order';
 
 import '../profile/profile.css';
 import './orders-history.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppState } from '../../services/reducers';
+import { IOrder } from '../../services/actions/websocket';
+import { getIngredients } from '../../services/actions/constructor';
+import { useEffect } from 'react';
+import {
+  WS_CLEAR_ORDERS,
+  WS_CONNECTION_CLOSE,
+  WS_CONNECTION_START,
+} from '../../services/action-types/websocket';
 
 export const OrderHistoryPage = () => {
+  const { orders } = useSelector((store: AppState) => store.ws);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({ type: WS_CONNECTION_START, payload: { isPrivate: true } });
+    dispatch(getIngredients());
+
+    return () => {
+      dispatch({ type: WS_CONNECTION_CLOSE });
+      dispatch({ type: WS_CLEAR_ORDERS });
+    };
+  }, [dispatch]);
+
+  const { ingredients: allIngredients } = useSelector(
+    (state: AppState) => state.constructor
+  );
+
   return (
     <div className="profile-container">
       <ProfileSidebar />
-      <div className="order-history-container ml-10">
-        <Order showStatus={true} ingredients={ingredients[0]} />
-        <Order showStatus={true} ingredients={ingredients[1]} />
-        <Order showStatus={true} ingredients={ingredients[1]} />
+      <div style={{ flex: 1, marginLeft: 100 }}>
+        {orders?.map((order: IOrder, index) => (
+          <Order
+            key={index}
+            ingredients={order.ingredients}
+            status={order.status}
+            number={order.number}
+            _id={order._id}
+            allIngredients={allIngredients}
+            name={order.name}
+            createdAt={order.createdAt}
+            showStatus
+          />
+        ))}
       </div>
     </div>
   );
 };
-
-const ingredients = [
-  [
-    'https://code.s3.yandex.net/react/code/meat-02.png',
-    'https://code.s3.yandex.net/react/code/meat-04.png',
-    'https://code.s3.yandex.net/react/code/meat-01.png',
-    'https://code.s3.yandex.net/react/code/bun-02.png',
-  ],
-  [
-    'https://code.s3.yandex.net/react/code/meat-02.png',
-    'https://code.s3.yandex.net/react/code/meat-04.png',
-    'https://code.s3.yandex.net/react/code/meat-01.png',
-    'https://code.s3.yandex.net/react/code/bun-02.png',
-    'https://code.s3.yandex.net/react/code/meat-02.png',
-    'https://code.s3.yandex.net/react/code/meat-04.png',
-    'https://code.s3.yandex.net/react/code/meat-01.png',
-    'https://code.s3.yandex.net/react/code/bun-02.png',
-  ],
-];

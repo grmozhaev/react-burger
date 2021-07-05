@@ -1,5 +1,6 @@
-import { ConstructorAction, ConstructorActionType as types, ConstructorState } from "../../actions/constructor";
 import update from "immutability-helper";
+
+import { ConstructorAction, ConstructorActionType as types, ConstructorState } from "../../actions/constructor";
 import { IngredientDTO } from "../../../components/ingredient/ingredient";
 
 export const initialConstructorState: ConstructorState = {

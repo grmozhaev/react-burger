@@ -1,4 +1,11 @@
+import { useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
+
+import { getIngredients } from '../../services/actions/constructor';
+import { IOrder } from '../../services/actions/websocket';
+import { AppState } from '../../services/reducers';
+import { formatDate } from '../../services/utils';
 import Price from '../price/price';
 
 import './feed-order.css';
@@ -54,41 +61,64 @@ const ingredientImages = (ingredients: string[]) => {
   );
 };
 
-interface OrderProps {
-  ingredients: string[];
-  showStatus?: boolean;
-}
+export const orderStatus = {
+  done: 'Выполнен',
+  pending: 'Отменён',
+  created: 'Готовится',
+};
 
-export const Order = (props: OrderProps) => {
-  const { ingredients, showStatus } = props;
+export const Order = (props: IOrder) => {
+  const { ingredients, _id, status, number, name, createdAt, showStatus } =
+    props;
+  const dispatch = useDispatch();
   const location = useLocation();
+
+  useEffect(() => {
+    dispatch(getIngredients());
+  }, [dispatch]);
+
+  const { ingredients: allIngredients } = useSelector(
+    (state: AppState) => state.constructor
+  );
+
+  const images: string[] = useMemo(() => {
+    return ingredients.map((ingredient) => allIngredients[ingredient]?.image);
+  }, [ingredients, allIngredients]);
+
+  const total = useMemo<number>(() => {
+    return ingredients.reduce((total: number, ingredient: string) => {
+      return allIngredients[ingredient].type === 'bun'
+        ? total + 2 * allIngredients[ingredient]?.price
+        : total + allIngredients[ingredient]?.price;
+    }, 0);
+  }, [ingredients, allIngredients]);
 
   return (
     <div className="order-bubble mb-6">
       <Link
         to={{
-          pathname: `${location.pathname}/34535`,
+          pathname: `${location.pathname}/${_id}`,
           state: { from: location },
         }}
         className="link-decoration link-color__white"
       >
         <div className="order-number-and-date p-6">
-          <span className="text text_type_digits-default">#034535</span>
+          <span className="text text_type_digits-default">{`#${number}`}</span>
           <span className="text text_type_main-default text_color_inactive">
-            Сегодня, 16:20 i-GMT+3
+            {formatDate(createdAt)}
           </span>
         </div>
-        <p className="text text_type_main-medium pl-6 pr-6">
-          Death Star Starship Main бургер
-        </p>
+        <p className="text text_type_main-medium pl-6 pr-6">{name}</p>
+
         {showStatus && (
           <p className="text text_type_main-default mt-2 pl-6 order-status">
-            Выполнен
+            {orderStatus[status]}
           </p>
         )}
+
         <div className="order-ingredients-pics pl-6 pr-2 mt-6">
-          {ingredientImages(ingredients)}
-          <Price price={540} />
+          {ingredientImages(images)}
+          <Price price={total} />
         </div>
       </Link>
     </div>

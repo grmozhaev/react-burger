@@ -18,3 +18,15 @@
 .done-orders-color {
   color: rgba(0, 204, 204, 1);
 }
+
+.orders-style {
+  display: flex;
+  height: 240px;
+  overflow: auto;
+  flex-wrap: wrap;
+}
+
+.orders-style__align {
+  flex: 1;
+  flex-basis: 50%;
+}

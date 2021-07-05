@@ -1,5 +1,6 @@
 import { useCallback, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { useDrop } from 'react-dnd';
 
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -12,18 +13,17 @@ import {
   BurgerConstructorIngredientProps,
   getOrderNumber,
 } from '../../services/actions/constructor';
-
-import './burger-constructor.css';
 import { AppState } from '../../services/reducers';
 import { doesBurgerHaveBun } from '../../services/reducers/constructor/constructor';
-import { useHistory } from 'react-router-dom';
+
+import './burger-constructor.css';
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [modalType, setModalType] = useState<ModalType | null>(null);
   const { ingredients, orderNumber, pickedIngredientIds } = useSelector(
-    (state: AppState) => state.root
+    (state: AppState) => state.constructor
   );
   const { isUserLoaded } = useSelector((store: AppState) => store.auth);
 
@@ -71,7 +71,7 @@ const BurgerConstructor = () => {
     setModalType(null);
   }, [setModalType]);
 
-  const total = useMemo(() => {
+  const total = useMemo<number>(() => {
     return pickedIngredients.reduce(
       (total: number, ingredient: BurgerConstructorIngredientProps) => {
         return ingredient.type === 'bun'

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useEffect } from 'react';
+import React, { useState, ChangeEvent, useCallback, useEffect } from 'react';
 import {
   PasswordInput,
   Input,
@@ -14,9 +14,9 @@ import '../forgot-password/forgot-password.css';
 import './profile.css';
 
 export const ProfilePage = () => {
-  const [login, setLogin] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [name, setName] = React.useState('');
+  const [login, setLogin] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const dispatch = useDispatch();
 
   const onLoginChange = (e: ChangeEvent<HTMLInputElement>) => {
