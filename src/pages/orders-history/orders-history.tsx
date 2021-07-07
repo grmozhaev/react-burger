@@ -15,7 +15,7 @@ import {
 } from '../../services/action-types/websocket';
 
 export const OrderHistoryPage = () => {
-  const { orders } = useSelector((store: AppState) => store.ws);
+  const { orders } = useSelector((state: AppState) => state.ws);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export const OrderHistoryPage = () => {
   }, [dispatch]);
 
   const { ingredients: allIngredients } = useSelector(
-    (state: AppState) => state.constructor
+    (state: AppState) => state.root
   );
 
   return (

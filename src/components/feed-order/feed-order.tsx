@@ -78,7 +78,7 @@ export const Order = (props: IOrder) => {
   }, [dispatch]);
 
   const { ingredients: allIngredients } = useSelector(
-    (state: AppState) => state.constructor
+    (state: AppState) => state.root
   );
 
   const images: string[] = useMemo(() => {

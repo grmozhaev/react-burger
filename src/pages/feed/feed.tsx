@@ -16,7 +16,7 @@ import './feed.css';
 export const FeedPage = () => {
   const dispatch = useDispatch();
   const { orders, total, totalToday } = useSelector(
-    (store: AppState) => store.ws
+    (state: AppState) => state.ws
   );
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export const FeedPage = () => {
   }, [dispatch]);
 
   const { ingredients: allIngredients } = useSelector(
-    (state: AppState) => state.constructor
+    (state: AppState) => state.root
   );
 
   const filterOrders = useCallback((orders: IOrder[]) => {

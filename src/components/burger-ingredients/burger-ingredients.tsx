@@ -24,9 +24,7 @@ const tabs = [
 ];
 
 const BurgerIngredients = () => {
-  const { ingredients, counter } = useSelector(
-    (store: AppState) => store.constructor
-  );
+  const { ingredients, counter } = useSelector((state: AppState) => state.root);
   const [state, setState] = useState({ activeTab: tabs[0].label });
   const location = useLocation();
 

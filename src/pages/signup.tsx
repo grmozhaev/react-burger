@@ -18,7 +18,7 @@ export const SignupPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const { isUserLoaded } = useSelector((store: AppState) => store.auth);
+  const { isUserLoaded } = useSelector((state: AppState) => state.auth);
   const history = useHistory();
 
   const dispatch = useDispatch();

@@ -38,7 +38,7 @@ export const OrderStatusPage = () => {
   }, [dispatch, params]);
 
   const { order } = useSelector((state: AppState) => state.ws);
-  const { ingredients } = useSelector((state: AppState) => state.constructor);
+  const { ingredients } = useSelector((state: AppState) => state.root);
 
   const orderInfo = useMemo(() => {
     return order?.ingredients.reduce(

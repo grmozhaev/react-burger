@@ -7,9 +7,9 @@ import { wsReducer } from './websocket/websocket';
 import { WsState } from "../actions/websocket";
 
 export const rootReducer = combineReducers({
-    constructor: constructorReducer,
+    root: constructorReducer,
     auth: authReducer,
     ws: wsReducer,
 })
 
-export interface AppState{ constructor: ConstructorState, auth: AuthState, ws: WsState };
+export interface AppState{ root: ConstructorState, auth: AuthState, ws: WsState };

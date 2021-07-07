@@ -21,7 +21,7 @@ interface State {
 export const ResetPasswordPage = () => {
   const [password, setPassword] = useState('');
   const [token, setToken] = useState('');
-  const auth = useSelector((store: AppState) => store.auth);
+  const auth = useSelector((state: AppState) => state.auth);
   const history = useHistory();
   const location: Location<State> = useLocation();
 

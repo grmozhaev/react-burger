@@ -23,9 +23,9 @@ const BurgerConstructor = () => {
   const history = useHistory();
   const [modalType, setModalType] = useState<ModalType | null>(null);
   const { ingredients, orderNumber, pickedIngredientIds } = useSelector(
-    (state: AppState) => state.constructor
+    (state: AppState) => state.root
   );
-  const { isUserLoaded } = useSelector((store: AppState) => store.auth);
+  const { isUserLoaded } = useSelector((state: AppState) => state.auth);
 
   const [{ isHover }, dropTarget] = useDrop({
     accept: 'ingredient',
