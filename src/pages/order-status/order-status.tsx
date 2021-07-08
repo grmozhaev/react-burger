@@ -11,10 +11,11 @@ import { getIngredients } from '../../services/actions/constructor';
 import { AppState } from '../../services/reducers';
 import { IngredientDTO } from '../../components/ingredient/ingredient';
 import { getOrder } from '../../services/actions/websocket';
-
-import './order-status.css';
+import { WS_CLEAR_ORDER } from '../../services/action-types/websocket';
 import { orderStatus } from '../../components/feed-order/feed-order';
 import { formatDate } from '../../services/utils';
+
+import './order-status.css';
 
 interface State {
   from?: Location;
@@ -35,6 +36,10 @@ export const OrderStatusPage = () => {
   useEffect(() => {
     dispatch(getIngredients());
     dispatch(getOrder(params.id));
+
+    return () => {
+      dispatch({ type: WS_CLEAR_ORDER });
+    };
   }, [dispatch, params]);
 
   const { order } = useSelector((state: AppState) => state.ws);
@@ -61,14 +66,18 @@ export const OrderStatusPage = () => {
   }, [order]);
 
   const total = useMemo(() => {
-    return order?.ingredients.reduce((total: number, ingredient: string) => {
-      return ingredients?.[ingredient]?.type === 'bun'
-        ? total + 2 * ingredients?.[ingredient]?.price
-        : total + ingredients?.[ingredient]?.price;
-    }, 0);
+    return (
+      Object.keys(ingredients).length &&
+      order?.ingredients.length &&
+      order?.ingredients.reduce((total: number, ingredient: string) => {
+        return ingredients?.[ingredient]?.type === 'bun'
+          ? total + 2 * ingredients?.[ingredient]?.price
+          : total + ingredients?.[ingredient]?.price;
+      }, 0)
+    );
   }, [order, ingredients]);
 
-  if (!order || !ingredients) {
+  if (!order || !total) {
     return <div>Loading...</div>;
   }
 

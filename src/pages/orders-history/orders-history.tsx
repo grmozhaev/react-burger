@@ -1,18 +1,20 @@
-import ProfileSidebar from '../../components/profile-sidebar/profile-sidebar';
-import { Order } from '../../components/feed-order/feed-order';
-
-import '../profile/profile.css';
-import './orders-history.css';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
+import ProfileSidebar from '../../components/profile-sidebar/profile-sidebar';
+
 import { AppState } from '../../services/reducers';
 import { IOrder } from '../../services/actions/websocket';
 import { getIngredients } from '../../services/actions/constructor';
-import { useEffect } from 'react';
 import {
   WS_CLEAR_ORDERS,
   WS_CONNECTION_CLOSE,
   WS_CONNECTION_START,
 } from '../../services/action-types/websocket';
+import { Order } from '../../components/feed-order/feed-order';
+
+import '../profile/profile.css';
+import './orders-history.css';
 
 export const OrderHistoryPage = () => {
   const { orders } = useSelector((state: AppState) => state.ws);

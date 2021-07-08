@@ -22,9 +22,8 @@ const BurgerConstructor = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [modalType, setModalType] = useState<ModalType | null>(null);
-  const { ingredients, orderNumber, pickedIngredientIds } = useSelector(
-    (state: AppState) => state.root
-  );
+  const { ingredients, orderNumber, pickedIngredientIds, orderNumberRequest } =
+    useSelector((state: AppState) => state.root);
   const { isUserLoaded } = useSelector((state: AppState) => state.auth);
 
   const [{ isHover }, dropTarget] = useDrop({
@@ -59,13 +58,22 @@ const BurgerConstructor = () => {
   }, [pickedIngredientIds, ingredients]);
 
   const openOrderModal = useCallback(() => {
-    if (isUserLoaded) {
+    if (isUserLoaded && !orderNumberRequest) {
       dispatch(getOrderNumber(pickedIngredientIds));
       setModalType(ModalType.ORDER);
-    } else {
+    }
+
+    if (!isUserLoaded) {
       history.push('/login');
     }
-  }, [dispatch, pickedIngredientIds, setModalType, history, isUserLoaded]);
+  }, [
+    dispatch,
+    pickedIngredientIds,
+    setModalType,
+    history,
+    isUserLoaded,
+    orderNumberRequest,
+  ]);
 
   const closeModal = useCallback(() => {
     setModalType(null);

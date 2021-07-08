@@ -1,8 +1,7 @@
-import { useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
-import { getIngredients } from '../../services/actions/constructor';
 import { IOrder } from '../../services/actions/websocket';
 import { AppState } from '../../services/reducers';
 import { formatDate } from '../../services/utils';
@@ -68,28 +67,22 @@ export const orderStatus = {
 };
 
 export const Order = (props: IOrder) => {
-  const { ingredients, _id, status, number, name, createdAt, showStatus } =
-    props;
-  const dispatch = useDispatch();
+  const { ingredients, status, number, name, createdAt, showStatus } = props;
   const location = useLocation();
-
-  useEffect(() => {
-    dispatch(getIngredients());
-  }, [dispatch]);
 
   const { ingredients: allIngredients } = useSelector(
     (state: AppState) => state.root
   );
 
   const images: string[] = useMemo(() => {
-    return ingredients.map((ingredient) => allIngredients[ingredient]?.image);
+    return ingredients.map((ingredient) => allIngredients?.[ingredient]?.image);
   }, [ingredients, allIngredients]);
 
   const total = useMemo<number>(() => {
     return ingredients.reduce((total: number, ingredient: string) => {
-      return allIngredients[ingredient].type === 'bun'
-        ? total + 2 * allIngredients[ingredient]?.price
-        : total + allIngredients[ingredient]?.price;
+      return allIngredients?.[ingredient]?.type === 'bun'
+        ? total + 2 * allIngredients?.[ingredient]?.price
+        : total + allIngredients?.[ingredient]?.price;
     }, 0);
   }, [ingredients, allIngredients]);
 
@@ -97,7 +90,7 @@ export const Order = (props: IOrder) => {
     <div className="order-bubble mb-6">
       <Link
         to={{
-          pathname: `${location.pathname}/${_id}`,
+          pathname: `${location.pathname}/${number}`,
           state: { from: location },
         }}
         className="link-decoration link-color__white"
@@ -112,7 +105,7 @@ export const Order = (props: IOrder) => {
 
         {showStatus && (
           <p className="text text_type_main-default mt-2 pl-6 order-status">
-            {orderStatus[status]}
+            {orderStatus?.[status]}
           </p>
         )}
 

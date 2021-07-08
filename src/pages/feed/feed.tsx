@@ -86,7 +86,6 @@ export const FeedPage = () => {
             </div>
             <div className="ml-6">
               <p className="text text_type_main-medium mb-6">В работе:</p>
-
               <div className="orders-style">
                 {ordersInProgress.map((order, index) => (
                   <div className="orders-style__align">

@@ -11,6 +11,7 @@ import {
   GET_ORDERS_FAILED,
   WS_CONNECTION_START,
   WS_CLEAR_ORDERS,
+  WS_CLEAR_ORDER
 } from '../action-types/websocket';
 
 import { fetchOrder } from "../api";
@@ -46,15 +47,16 @@ export type WsAction =
 | { type: typeof GET_ORDERS_SUCCESS, payload: { order: IOrder } }
 | { type: typeof GET_ORDERS_FAILED }
 | { type: typeof WS_CLEAR_ORDERS }
+| { type: typeof WS_CLEAR_ORDER }
 
 export const getOrder =
   (orderId: string) => async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
-    dispatch({ type: "GET_ORDERS_REQUEST" });
+    dispatch({ type: GET_ORDERS_REQUEST });
 
     try {
       const orders = await fetchOrder(orderId);
-      dispatch({ type: "GET_ORDERS_SUCCESS", payload: {order: orders[0]} });
+      dispatch({ type: GET_ORDERS_SUCCESS, payload: {order: orders[0]} });
     } catch (e) {
-      dispatch({ type: "GET_ORDERS_FAILED" });
+      dispatch({ type: GET_ORDERS_FAILED });
     }
   };

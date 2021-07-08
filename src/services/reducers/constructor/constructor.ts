@@ -9,6 +9,8 @@ export const initialConstructorState: ConstructorState = {
   ingredientsFailed: false,
   ingredientsRequest: false,
   orderNumber: null,
+  orderNumberFailed: false,
+  orderNumberRequest: false,
   selectedIngredientId: null,
   counter: {},
 };

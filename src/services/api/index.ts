@@ -33,6 +33,7 @@ export const createOrder = async (pickedIngredientIds: string[]) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=utf-8",
+      authorization: "Bearer " + getCookie("accessToken"),
     },
     body: JSON.stringify({ ingredients: pickedIngredientIds }),
   });
