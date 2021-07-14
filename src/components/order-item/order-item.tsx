@@ -8,6 +8,7 @@ import Price from '../price/price';
 import './order-item.css';
 import { useDispatch } from 'react-redux';
 import { Identifier } from 'dnd-core';
+import { ConstructorActionType } from '../../services/actions/constructor';
 
 export interface OrderItemProps {
   image: string;
@@ -34,7 +35,7 @@ const OrderItem = (props: OrderItemProps) => {
 
   const handleDelete = () => {
     dispatch({
-      type: 'DELETE_INGREDIENT',
+      type: ConstructorActionType.DELETE_INGREDIENT,
       pickedIngredient: { id: _id, index },
     });
   };

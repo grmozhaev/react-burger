@@ -15,6 +15,7 @@ import {
 } from '../../services/actions/constructor';
 import { AppState } from '../../services/reducers';
 import { doesBurgerHaveBun } from '../../services/reducers/constructor/constructor';
+import { ConstructorActionType } from '../../services/actions/constructor';
 
 import './burger-constructor.css';
 
@@ -33,11 +34,11 @@ const BurgerConstructor = () => {
     }),
     drop(item: BurgerConstructorIngredientProps) {
       dispatch({
-        type: 'PICK_INGREDIENT',
+        type: ConstructorActionType.PICK_INGREDIENT,
         pickedIngredient: { id: item._id },
       });
       dispatch({
-        type: 'INCREASE_ITEM_COUNT',
+        type: ConstructorActionType.INCREASE_ITEM_COUNT,
         pickedIngredient: { id: item._id },
       });
     },
