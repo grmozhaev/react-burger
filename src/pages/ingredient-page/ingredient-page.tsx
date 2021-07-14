@@ -31,8 +31,8 @@ export const IngredientPage = () => {
     dispatch(getIngredients());
   }, [dispatch]);
 
-  const ingredient = useSelector((store: AppState) => {
-    return store.root.ingredients[params.id];
+  const ingredient = useSelector((state: AppState) => {
+    return state.root.ingredients[params.id];
   });
 
   const header = 'Детали ингредиента';

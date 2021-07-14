@@ -1,4 +1,4 @@
-import React, { useCallback, ChangeEvent } from 'react';
+import React, { useState, useCallback, ChangeEvent } from 'react';
 import { Link, Redirect, useHistory, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -19,9 +19,9 @@ interface State {
 }
 
 export const ResetPasswordPage = () => {
-  const [password, setPassword] = React.useState('');
-  const [token, setToken] = React.useState('');
-  const auth = useSelector((store: AppState) => store.auth);
+  const [password, setPassword] = useState('');
+  const [token, setToken] = useState('');
+  const auth = useSelector((state: AppState) => state.auth);
   const history = useHistory();
   const location: Location<State> = useLocation();
 

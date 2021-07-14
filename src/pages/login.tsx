@@ -15,7 +15,7 @@ export const LoginPage = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { isUserLoaded } = useSelector((store: AppState) => store.auth);
+  const { isUserLoaded } = useSelector((state: AppState) => state.auth);
 
   const onEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);

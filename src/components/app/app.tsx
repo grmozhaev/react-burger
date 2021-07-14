@@ -15,7 +15,6 @@ import {
   IngredientPage,
   NotFoundPage,
 } from '../../pages';
-// import { OrderStatusModal } from '../order-status-modal/order-status-modal';
 
 import './app.css';
 

@@ -1,5 +1,6 @@
 import { useCallback, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { useDrop } from 'react-dnd';
 
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -12,20 +13,19 @@ import {
   BurgerConstructorIngredientProps,
   getOrderNumber,
 } from '../../services/actions/constructor';
-
-import './burger-constructor.css';
 import { AppState } from '../../services/reducers';
 import { doesBurgerHaveBun } from '../../services/reducers/constructor/constructor';
-import { useHistory } from 'react-router-dom';
+import { ConstructorActionType } from '../../services/actions/constructor';
+
+import './burger-constructor.css';
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [modalType, setModalType] = useState<ModalType | null>(null);
-  const { ingredients, orderNumber, pickedIngredientIds } = useSelector(
-    (state: AppState) => state.root
-  );
-  const { isUserLoaded } = useSelector((store: AppState) => store.auth);
+  const { ingredients, orderNumber, pickedIngredientIds, orderNumberRequest } =
+    useSelector((state: AppState) => state.root);
+  const { isUserLoaded } = useSelector((state: AppState) => state.auth);
 
   const [{ isHover }, dropTarget] = useDrop({
     accept: 'ingredient',
@@ -34,11 +34,11 @@ const BurgerConstructor = () => {
     }),
     drop(item: BurgerConstructorIngredientProps) {
       dispatch({
-        type: 'PICK_INGREDIENT',
+        type: ConstructorActionType.PICK_INGREDIENT,
         pickedIngredient: { id: item._id },
       });
       dispatch({
-        type: 'INCREASE_ITEM_COUNT',
+        type: ConstructorActionType.INCREASE_ITEM_COUNT,
         pickedIngredient: { id: item._id },
       });
     },
@@ -59,19 +59,28 @@ const BurgerConstructor = () => {
   }, [pickedIngredientIds, ingredients]);
 
   const openOrderModal = useCallback(() => {
-    if (isUserLoaded) {
+    if (isUserLoaded && !orderNumberRequest) {
       dispatch(getOrderNumber(pickedIngredientIds));
       setModalType(ModalType.ORDER);
-    } else {
+    }
+
+    if (!isUserLoaded) {
       history.push('/login');
     }
-  }, [dispatch, pickedIngredientIds, setModalType, history, isUserLoaded]);
+  }, [
+    dispatch,
+    pickedIngredientIds,
+    setModalType,
+    history,
+    isUserLoaded,
+    orderNumberRequest,
+  ]);
 
   const closeModal = useCallback(() => {
     setModalType(null);
   }, [setModalType]);
 
-  const total = useMemo(() => {
+  const total = useMemo<number>(() => {
     return pickedIngredients.reduce(
       (total: number, ingredient: BurgerConstructorIngredientProps) => {
         return ingredient.type === 'bun'

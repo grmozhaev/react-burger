@@ -19,6 +19,8 @@ export interface ConstructorState {
   ingredientsFailed: boolean;
   ingredientsRequest: boolean;
   orderNumber: number | null;
+  orderNumberFailed: boolean,
+  orderNumberRequest: boolean,
   selectedIngredientId: number | null;
   counter: Record<string, number>;
 }
@@ -50,25 +52,25 @@ export enum ConstructorActionType {
 
 export const getIngredients =
   () => async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
-    dispatch({ type: "GET_INGREDIENTS_REQUEST" });
+    dispatch({ type: ConstructorActionType.GET_INGREDIENTS_REQUEST });
 
     try {
       const ingredients = await fetchIngredients();
-      dispatch({ type: "GET_INGREDIENTS_SUCCESS", ingredients });
+      dispatch({ type: ConstructorActionType.GET_INGREDIENTS_SUCCESS, ingredients });
     } catch (e) {
-      dispatch({ type: "GET_INGREDIENTS_FAILED" });
+      dispatch({ type: ConstructorActionType.GET_INGREDIENTS_FAILED });
     }
   };
 
 export const getOrderNumber =
   (pickedIngredientIds: string[]) =>
   async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
-    dispatch({ type: "GET_ORDER_NUMBER_REQUEST" });
+    dispatch({ type: ConstructorActionType.GET_ORDER_NUMBER_REQUEST });
 
     try {
       const orderNumber = await createOrder(pickedIngredientIds);
-      dispatch({ type: "GET_ORDER_NUMBER_SUCCESS", orderNumber });
+      dispatch({ type: ConstructorActionType.GET_ORDER_NUMBER_SUCCESS, orderNumber });
     } catch (e) {
-      dispatch({ type: "GET_ORDER_NUMBER_FAILED" });
+      dispatch({ type: ConstructorActionType.GET_ORDER_NUMBER_FAILED });
     }
   };

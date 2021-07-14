@@ -1,5 +1,6 @@
-import { ConstructorAction, ConstructorActionType as types, ConstructorState } from "../../actions/constructor";
 import update from "immutability-helper";
+
+import { ConstructorAction, ConstructorActionType as types, ConstructorState } from "../../actions/constructor";
 import { IngredientDTO } from "../../../components/ingredient/ingredient";
 
 export const initialConstructorState: ConstructorState = {
@@ -8,6 +9,8 @@ export const initialConstructorState: ConstructorState = {
   ingredientsFailed: false,
   ingredientsRequest: false,
   orderNumber: null,
+  orderNumberFailed: false,
+  orderNumberRequest: false,
   selectedIngredientId: null,
   counter: {},
 };

@@ -52,40 +52,40 @@ export enum AuthActionType {
 export const editUserInfo =
   (name: string, email: string, password: string) =>
   async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
-    dispatch({ type: "EDIT_USER_REQUEST" });
+    dispatch({ type: AuthActionType.EDIT_USER_REQUEST });
 
     try {
       const data = await editUser(name, email, password);
-      dispatch({ type: "EDIT_USER_SUCCESS", data });
+      dispatch({ type: AuthActionType.EDIT_USER_SUCCESS, data });
     } catch (error) {
-      dispatch({ type: "EDIT_USER_FAILED" });
+      dispatch({ type: AuthActionType.EDIT_USER_FAILED });
     }
   };
 
 export const signup =
   (name: string, email: string, password: string, history: History) =>
   async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
-    dispatch({ type: "GET_SIGNUP_REQUEST" });
+    dispatch({ type: AuthActionType.GET_SIGNUP_REQUEST });
 
     try {
       const data = await createUser(name, email, password);
-      dispatch({ type: "GET_SIGNUP_SUCCESS", data });
+      dispatch({ type: AuthActionType.GET_SIGNUP_SUCCESS, data });
       history.push('/login');
     } catch (error) {
-      dispatch({ type: "GET_SIGNUP_FAILED" });
+      dispatch({ type: AuthActionType.GET_SIGNUP_FAILED });
     }
   };
 
 export const signin =
   (email: string, password: string) =>
   async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
-    dispatch({ type: "GET_SIGNIN_REQUEST" });
+    dispatch({ type: AuthActionType.GET_SIGNIN_REQUEST });
 
     try {
       const data = await login(email, password);
-      dispatch({ type: "GET_SIGNIN_SUCCESS", data });
+      dispatch({ type: AuthActionType.GET_SIGNIN_SUCCESS, data });
     } catch (error) {
-      dispatch({ type: "GET_SIGNIN_FAILED" });
+      dispatch({ type: AuthActionType.GET_SIGNIN_FAILED });
     }
   };
 

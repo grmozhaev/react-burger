@@ -9,7 +9,7 @@ interface ProtectedRouteProps extends RouteProps {
 
 export const ProtectedRoute = (props: ProtectedRouteProps) => {
   const location = useLocation();
-  const { isUserLoaded } = useSelector((store: AppState) => store.auth);
+  const { isUserLoaded } = useSelector((state: AppState) => state.auth);
 
   if (isUserLoaded) {
     return <Route {...props} />;
